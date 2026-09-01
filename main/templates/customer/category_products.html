@@ -1,0 +1,585 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>handmade Candles | Women Craft Marketplace</title>
+  <style>
+   
+     * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background-color: #f8c8c4;
+    }
+
+    .page-content {
+      flex: 1;
+    }
+
+  
+    header {
+      background-color: #ffb6b3;
+      display: flex;
+      align-items: center;
+      padding: 15px 50px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .logo img {
+      width: 50px;
+      height: auto;
+      background-color: #f8c8c4;
+      padding: 5px;
+      border-radius: 50%;
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: 20px;
+    }
+
+    .search-bar input {
+      padding: 8px;
+      width: 200px;
+      font-weight: bold;
+      font-size: 14px;
+      border: 2px solid #ff6685;
+      border-radius: 5px;
+    }
+
+    .search-bar button {
+      padding: 8px 12px;
+      font-size: 14px;
+      font-weight: bold;
+      background: #ff2768;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    nav {
+      margin-left: auto;
+    }
+
+    .nav-link, nav a {
+      color: black;
+      text-decoration: none;
+      margin-right: 12px;
+      font-size: 13px;
+    }
+
+    nav a:hover {
+      color: #555;
+      text-decoration: underline;
+    }
+
+    i {
+      margin-right: 5px;
+    }
+.closeBtn {
+  float: left;
+  font-size: 22px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+
+
+.category-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+
+  .category-modal {
+    display: none;
+    position: absolute;
+    top: 100%; 
+    left: 0;
+    width: 280px; 
+    background: #fff7f8;
+    padding: 20px;
+    margin-top: 5px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    border: 2px solid #ff2768;
+    z-index: 9999;
+  }
+
+  .modal-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .modal-content li a {
+    font-size: 15px;
+    font-weight: bold;
+    color: #b0374e;
+    background-color: #ffe5e2;
+    padding: 6px 12px;
+    border-radius: 8px;
+    text-align: center;
+    transition: all 0.3s ease;
+    display: block;
+  }
+
+  .modal-content li a:hover {
+    background-color: #ff2768;
+    color: white;
+  }
+
+  .modal-content .close {
+    float: right;
+    font-size: 18px;
+    color: #e6003d;
+    cursor: pointer;
+    margin-bottom: 10px;
+  }
+
+.cart-section {
+  display: flex;
+  align-items: center;
+  gap:5px;
+}
+
+.cart-icon:hover{
+  transform: scale(1.1);
+}
+.cart-box {
+  padding: 20px;
+  border-radius: 10px; 
+  display: inline-block;
+}
+
+.cart-img {
+  width: 40px;  
+  height: 40px;
+}
+
+
+.join-seller-btn {
+  background-color: none;
+ 
+  
+  
+}
+
+
+
+    
+    .top-heading {
+      text-align: center;
+      background-color: #fff;
+      padding: 20px 0;
+      font-size: 36px;
+      font-weight: bold;
+      color: #ff2768;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      max-width: 1200px;
+      margin: 20px auto;
+      alignment-baseline:center ;
+      white-space: nowrap; 
+      width: 100%;
+    }
+
+    .container {
+      display: flex;
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 20px;
+      gap: 20px;
+    }
+
+    .section-title {
+      text-align: center;
+      margin: 20px 0 40px;
+      color: #d1777d;
+      font-size: 32px;
+    }
+
+   
+    .sidebar {
+      width: 250px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+    .sidebar h2 {
+      margin: 0 0 10px;
+      color: #d1777d;
+      font-size: 24px;
+    }
+    .sidebar p {
+      font-size: 14px;
+      color: #666;
+    }
+
+    
+    .products {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; 
+  gap: 20px;
+}
+.empty-message {
+  grid-column: 1 / -1;
+  text-align: center;
+  font-size: 18px;
+  color: #888;
+  padding: 40px 0;
+}
+
+    .card {
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      width: 220px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      transition: 0.3s ease;
+    }
+
+    
+    .card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+    }
+
+    .card-body {
+      padding: 10px;
+    }
+
+    .card-body h3 {
+      font-size: 16px;
+      color: #333;
+      margin: 10px 0 5px;
+    }
+
+    .card-body p {
+      color: #666;
+      font-size: 13px;
+      margin: 0 0 6px;
+    }
+
+    .price {
+      font-weight: bold;
+      color: #e84a5f;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+      }
+    }
+    .cart-btn {
+  display: block;
+  width: 100%;
+  padding: 12px 0;
+  margin-top: 8px;
+  background-color: #ff2768;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.cart-btn:hover {
+  background-color: #e65778;
+}
+  footer {
+      background: #ff2768;
+      padding: 18px;
+      text-align: center;
+      font-size: 20px;
+      color: white;
+      width: 100%;
+      margin-top: auto;
+    }
+
+    .footer-links {
+      margin-bottom: 10px;
+      color: white;
+    }
+
+    .footer a {
+      color: rgba(10, 9, 9, 0.829);
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: 500;
+      font-size: 20px;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+      color: white;
+    }
+    @keyframes fadeInSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}.out-of-stock {
+  background: #ffe5e5;
+  color: #d8000c;
+  font-weight: bold;
+  font-size: 16px;
+  padding: 10px 15px;
+  border: 2px solid #d8000c;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+
+  </style>
+</head>
+<body>
+  <header>
+        
+               <div class="logo">
+                        <img src="{% static 'images/logo.jpeg' %}" alt="Logo">
+        </div>
+
+        
+        
+        <form action="{% url 'search_products' %}" method="GET" class="search-bar">
+    <input type="text" name="q" placeholder="Search..." required>
+    <button type="submit"><i class="fas fa-search"></i></button>
+</form>
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+        <nav>
+            <ul>
+              <nav class="header-nav">
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+             
+             <a href="{% url 'homeee' %}" data-url="{% url 'homeee' %}" onclick="loadPage(event, this.dataset.url)">
+              <i class="fas fa-home"></i> Home</a>
+              <div class="category-wrapper">
+                <a href="#" class="nav-link" onclick="toggleCategoryModal(event)">
+                  <i class="fas fa-bars"></i>Category
+                </a>
+                <div id="categoryModal" class="category-modal">
+
+<div class="modal-content">
+  <span class="close" onclick="closeCategoryModal()"><i class="fas fa-times"></i></span>
+  <ul>
+    {% for category in categories %}
+      <li>
+        <a href="{% url 'category_products' category.id %}">
+          <i class="{{ category.icon_class }}"></i> {{ category.name }}
+        </a>
+      </li>
+    {% empty %}
+      <li>No categories available</li>
+    {% endfor %}
+  </ul>
+</div>
+                   </div>
+                  </div>
+                </div>
+                
+               {% if request.session.customer_id %}
+  <a href="{% url 'customerdashboard' %}">
+    <i class="fas fa-user"></i> My Account
+  </a>
+  <a href="{% url 'customerlogout' %}">
+    <i class="fas fa-sign-out-alt"></i> Logout
+  </a>
+{% else %}
+  <a href="{% url 'custsignup' %}">
+    <i class="fas fa-user-plus"></i> Sign Up
+  </a>
+  <a href="{% url 'custlogin' %}">
+    <i class="fas fa-sign-in-alt"></i> Login
+  </a>
+{% endif %}
+
+    
+                <a href="{% url 'cart_vie' %}" data-url="{% url 'cart_vie' %}" onclick="loadPage(event, this.dataset.url)">
+                  <i class="fas fa-shopping-cart"></i> Cart</a>
+              
+                <a href="{% url 'wishlistok' %}" data-url="{% url 'wishlistok' %}" onclick="loadPage(event, this.dataset.url)">
+                  <i class="fas fa-heart"></i> Wishlist</a>
+              
+               
+            {% if request.session.seller_id %}
+  
+  <a href="{% url 'seller_redirect' %}">
+    <i class="fas fa-user"></i> Sell
+  </a>
+  <a href="{% url 'sellerlogout' %}">
+    <i class="fas fa-sign-out-alt"></i> Logout
+  </a>
+{% else %}
+
+  <a href="{% url 'sellersignup' %}">
+    <i class="fas fa-user-plus"></i> Join as Seller
+  </a>
+  <a href="{% url 'sellerlogin' %}">
+    <i class="fas fa-sign-in-alt"></i> Login
+  </a>
+{% endif %}
+
+                               </nav>
+               </ul>
+
+       
+    </header>
+
+  <div class="top-heading">{{ category.name }}</div>
+
+
+  <div class="page-wrapper">
+    <div class="container">
+     
+      <div class="products">
+        {% for product in products %}
+        <div class="card">
+           <a href="{% url 'productdetail' product.id %}">
+        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+      </a>
+          <div class="card-body">
+            <h3>{{ product.name }}</h3>
+            <div class="price">Rs. {{ product.price }}</div>
+           {% if product.quantity > 0 %}
+    <button class="cart-btn" onclick="addToCart('{{ product.id }}', '{{ product.name }}')">
+      <i class="fas fa-shopping-cart"></i> Add to Cart
+    </button>
+  {% else %}
+    <div id="outOfStockMessage" class="out-of-stock">
+      Out of Stock
+    </div>
+  {% endif %}
+          </div>
+        </div>
+       {% empty %}
+  <div class="empty-message">No products available in this category.</div>
+{% endfor %}
+      </div>
+    </div>
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer-links">
+    
+    <p>
+      <a href="{% url 'contactus' %}" style="color: white;">Contact Us</a> |
+      <a href="{% url 'privacypolicy' %}" style="color: white;">Privacy Policy</a> |
+      <a href="{% url 'custterms' %}" style="color: white;">Terms and Conditions</a> |
+      <a href="{% url 'exchange' %}" style="color: white;">Exchange Policy</a> |
+      <a href="{% url 'refund' %}" style="color: white;">Refund Policy</a> |
+      <a href="{% url 'helpcenter' %}" style="color: white;">Help Center</a> |
+      <a href="{% url 'aboutuss' %}" style="color: white;">About Us</a>
+    </p>
+    <p>&copy; 2025 CRAFTIFY</p>
+  </div>
+</footer>
+
+
+  <script>
+    function toggleCategoryModal(event) {
+      event.preventDefault();
+      var modal = document.getElementById("categoryModal");
+      modal.style.display = (modal.style.display === "block") ? "none" : "block";
+    }
+
+    function closeCategoryModal() {
+      document.getElementById("categoryModal").style.display = "none";
+    }
+
+    window.addEventListener("click", function(event) {
+      var modal = document.getElementById("categoryModal");
+      var button = document.querySelector(".category-wrapper");
+      if (!modal.contains(event.target) && !button.contains(event.target)) {
+        modal.style.display = "none";
+      }
+    });
+
+    
+  </script>
+  <script>
+function addToCart(productId, productName) {
+    fetch("{% url 'add_to_cart' %}", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "X-CSRFToken": "{{ csrf_token }}"
+        },
+        body: `product_id=${productId}&quantity=1`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'added') {
+            alert(`"${productName}" has been added to your cart.`);
+        } else if (data.status === 'updated') {
+            alert(`Quantity of "${productName}" has been updated in your cart.`);
+        } else if (data.status === 'out_of_stock') {
+            alert(`"${productName}" is out of stock!`);
+           
+            const cartBtn = document.querySelector(".cart-btn");
+            if (cartBtn) {
+                cartBtn.outerHTML = `<div class="out-of-stock">Out of Stock</div>`;
+            }
+        } else if (data.status === 'not_logged_in') {
+            alert("Please login to add items to cart.");
+            window.location.href = "{% url 'custlogin' %}";
+        } else {
+            alert("Error adding to cart.");
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert("Something went wrong.");
+    });
+}
+
+</script>
+
+
+</body>
+</html>
+

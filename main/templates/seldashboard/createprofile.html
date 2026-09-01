@@ -1,0 +1,323 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #ffc6c3; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .profile-container {
+            background:  #f7ddda;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: none; 
+            width: 600px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+
+        h2 {
+            text-align: center;
+            color: #ff2768;  
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+            color: black;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            background: #ff2768;  
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 20%;
+            margin-top: 15px;
+        }
+.error {
+  font-size: 13px;
+  color: red;
+  margin-bottom: 10px;
+  text-align: left;
+}
+        button:hover {
+            background: #ff2768; 
+        }
+
+        .image-container {
+            text-align: center;
+        }
+
+        img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+            border: 2px solid #ddd;
+        }
+        
+    </style>
+</head>
+<body>
+<form method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
+    <div class="profile-container">
+        <h2>Create Profile</h2> 
+        <div class="image-container">
+            <img id="profile-pic" src="{% if seller.profile_image %}{{ seller.profile_image.url }}{% else %}/static/images/default-avatar.png{% endif %}" alt="Profile Picture" width="120">
+
+            <input type="file" name="profile_image" id="profile-image" accept="image/*" onchange="previewImage(event)">
+
+        </div>
+
+        <label for="full-name">Full Name</label>
+        <input type="text" name="full_name" id="full-name" maxlength="25"placeholder="Enter your full name">
+
+        <label for="username">Username</label>
+        <input type="text" name="username" id="username"maxlength="25" placeholder="Enter your username">
+
+        <label for="dob">Date of Birth</label>
+        <input type="date" name="dob"id="dob"   maxlength="8">
+
+        <label for="shop-name">Shop Name</label>
+        <input type="text" name="shop_name" maxlength="20"id="shop-name">
+
+        <label for="experience">Experience (Years)</label>
+        <input type="number" name="experience" id="experience" maxlength="3"placeholder="Enter your experience">
+
+        <label for="skills">Skills</label>
+        <input type="text" name="skills" id="skills" maxlength="50"placeholder="Enter your skills (e.g., Handmade Jewelry, Painting)">
+
+        <select id="city" name="city"> 
+            <option value="">Select Your City</option>
+            <option value="Karachi">Karachi</option>
+            <option value="Lahore">Lahore</option>
+            <option value="Islamabad">Islamabad</option>
+            <option value="Rawalpindi">Rawalpindi</option>
+            <option value="Faisalabad">Faisalabad</option>
+            <option value="Multan">Multan</option>
+            <option value="Peshawar">Peshawar</option>
+            <option value="Quetta">Quetta</option>
+            <option value="Sialkot">Sialkot</option>
+            <option value="Gujranwala">Gujranwala</option>
+            <option value="Hyderabad">Hyderabad</option>
+            <option value="Sargodha">Sargodha</option>
+            <option value="Bahawalpur">Bahawalpur</option>
+            <option value="Sukkur">Sukkur</option>
+            <option value="Mardan">Mardan</option>
+            <option value="Abbottabad">Abbottabad</option>
+            <option value="Dera Ghazi Khan">Dera Ghazi Khan</option>
+            <option value="Mirpur Khas">Mirpur Khas</option>
+            <option value="Rahim Yar Khan">Rahim Yar Khan</option>
+            <option value="Chiniot">Chiniot</option>
+            <option value="Sheikhupura">Sheikhupura</option>
+        </select>
+
+        <label for="additional-details">Additional Details (Optional)</label>
+        
+        <textarea id="additional-details" name="additional_details" placeholder="Enter any additional details"></textarea> <!-- ✅ ADD name -->
+        <button type="submit">Save Profile</button>
+    </div>
+    </form>
+
+   <script>
+    function previewImage(event) {
+        const image = document.getElementById("profile-pic");
+        const file = event.target.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function () {
+            image.src = reader.result;
+        }
+
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    }
+
+    const fullName = document.getElementById("full-name");
+    const username = document.getElementById("username");
+    const dob = document.getElementById("dob");
+    const shopName = document.getElementById("shop-name");
+    const experience = document.getElementById("experience");
+    const skills = document.getElementById("skills");
+    const city = document.getElementById("city");
+    const additionalDetails = document.getElementById("additional-details");
+    const saveBtn = document.querySelector("button");
+
+    const fullNameError = document.createElement("div");
+    fullNameError.className = "error";
+    fullName.after(fullNameError);
+
+    const usernameError = document.createElement("div");
+    usernameError.className = "error";
+    username.after(usernameError);
+
+    const shopNameError = document.createElement("div");
+    shopNameError.className = "error";
+    shopName.after(shopNameError);
+
+    const experienceError = document.createElement("div");
+    experienceError.className = "error";
+    experience.after(experienceError);
+
+    const skillsError = document.createElement("div");
+    skillsError.className = "error";
+    skills.after(skillsError);
+
+    const cityError = document.createElement("div");
+    cityError.className = "error";
+    city.after(cityError);
+
+    const dobError = document.createElement("div");
+dobError.className = "error";
+dob.after(dobError);
+
+function validateProfileForm() {
+    let valid = true;
+    const letterOnlyRegex = /^[A-Za-z\s]+$/;
+    const numberOnlyRegex = /^[0-9]+$/;
+
+    
+    [fullName, username, shopName, skills].forEach(input => {
+        if (input.value.startsWith(" ")) {
+            input.value = input.value.trimStart();
+        }
+    });
+
+    
+    if (!letterOnlyRegex.test(fullName.value.trim()) || fullName.value.trim() === "") {
+        fullNameError.textContent = "Only alphabets allowed.";
+        valid = false;
+    } else {
+        fullNameError.textContent = "";
+    }
+
+    
+    if (username.value.trim() === "") {
+        usernameError.textContent = "Username is required.";
+        valid = false;
+    } else {
+        usernameError.textContent = "";
+    }
+
+    if (shopName.value.trim() === "") {
+        shopNameError.textContent = "Shop name is required.";
+        valid = false;
+    } else {
+        shopNameError.textContent = "";
+    }
+
+   
+    if (!numberOnlyRegex.test(experience.value.trim()) || parseInt(experience.value) < 0) {
+        experienceError.textContent = "Only positive numbers allowed.";
+        valid = false;
+    } else {
+        experienceError.textContent = "";
+    }
+
+    
+    if (!letterOnlyRegex.test(skills.value.trim()) || skills.value.trim() === "") {
+        skillsError.textContent = "Only alphabets allowed.";
+        valid = false;
+    } else {
+        skillsError.textContent = "";
+    }
+
+    
+    if (city.value === "") {
+        cityError.textContent = "Please select a city.";
+        valid = false;
+    } else {
+        cityError.textContent = "";
+    }
+
+   
+    if (dob.value) {
+        const dobParts = dob.value.split("-");
+        const year = parseInt(dobParts[0]);
+        const month = parseInt(dobParts[1]);
+        const day = parseInt(dobParts[2]);
+
+        if (
+            dobParts.length !== 3 ||
+            dobParts[0].length !== 4 || 
+            year < 1000 || year > 9999 || 
+            month < 1 || month > 12 ||
+            day < 1 || day > 31
+        ) {
+            dobError.textContent = "Invalid Date! Use mm-dd-yyyy";
+            valid = false;
+        } else {
+            dobError.textContent = "";
+        }
+    } else {
+        dobError.textContent = "Date of Birth is required.";
+        valid = false;
+    }
+
+    saveBtn.disabled = !valid;
+    saveBtn.style.cursor = valid ? "pointer" : "not-allowed";
+}
+
+
+dob.addEventListener("input", () => {
+    const parts = dob.value.split("-");
+    if (parts[0] && parts[0].length > 4) {
+        parts[0] = parts[0].slice(0, 4);
+        dob.value = parts.join("-");
+    }
+});
+
+[fullName, username, shopName, experience, skills, city, dob].forEach(input => {
+    input.addEventListener("input", validateProfileForm);
+    input.addEventListener("change", validateProfileForm);
+});
+
+    
+    window.onload = function () {
+        fullName.value = "";
+        username.value = "";
+        dob.value = "";
+        shopName.value = "";
+        experience.value = "";
+        skills.value = "";
+        city.value = "";
+        additionalDetails.value = "";
+        document.getElementById("profile-pic").src = "/static/images/default-avatar.png";
+
+        validateProfileForm();
+    };
+</script>
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Management</title>
+    <style>
+     h1 {
+      
+      margin-bottom: 20px;
+      color: #ff2768;
+    }
+     th {
+      background-color: #ff2768;
+      color: #fff;}
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 40px;
+            background:white;
+            
+        }
+        th, td {
+            border: 1px solid #aaa;
+            padding: 8px;
+            text-align: center;
+        }
+        .btn {
+            padding: 6px 12px;
+            text-decoration: none;
+            border-radius: 4px;
+            color: #fff;
+        }
+        .suspend { background-color:  orange; }
+        .approve { background-color: green; }
+        .link { color: #ff2768; text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <h1>Sellers</h1>
+    <table>
+        <tr>
+            <th>ID</th><th>Name</th><th>Email</th><th>Shop Name</th>
+            <th>Account Type</th><th>Account Number</th><th>Status</th><th>Action</th>
+        </tr>
+        {% for seller in sellers %}
+        <tr>
+            <td>{{ seller.id }}</td>
+            <td>{{ seller.name }}</td>
+            <td>{{ seller.email }}</td>
+            <td ><a href="{% url 'view_seller_prof' seller.id %}" style="color: #ff2768;">{{ seller.shop_name }}</a>
+
+</td>
+            <td>{{ seller.account_type }}</td>
+            <td>{{ seller.account_number }}</td>
+            <td>{{ seller.status }}</td>
+           <td>
+    {% if seller.status == 'Suspended' %}
+        <a href="{% url 'toggle_seller_status' seller.id %}" class="btn approve">Unsuspend</a>
+    {% else %}
+        <a href="{% url 'toggle_seller_status' seller.id %}" class="btn suspend">Suspend</a>
+    {% endif %}
+</td>
+
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h1>Customers</h1>
+    <table>
+        <tr>
+            <th>ID</th><th>Name</th><th>Email</th><th>Status</th><th>Action</th>
+        </tr>
+        {% for customer in customers %}
+        <tr>
+            <td>{{ customer.id }}</td>
+            <td>{{ customer.name }}</td>
+            <td>{{ customer.email }}</td>
+            <td>{{ customer.status }}</td>
+           <td>
+    {% if customer.status == 'Suspended' %}
+        <a href="{% url 'toggle_customer_status' customer.id %}" class="btn approve">Unsuspend</a>
+    {% else %}
+        <a href="{% url 'toggle_customer_status' customer.id %}" class="btn suspend">Suspend</a>
+    {% endif %}
+</td>
+
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

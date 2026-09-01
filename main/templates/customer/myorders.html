@@ -1,0 +1,891 @@
+{% load tz %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Orders</title>
+  <style>
+    h1 {
+      color: #ff2768;
+      text-align: center;
+    }
+    .order-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
+    .order-buttons button {
+      border: none;
+      padding: 12px 20px;
+      color: white;
+      background: #ff2768;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: transform 0.2s, background 0.3s, color 0.3s;
+    }
+    .order-content {
+      margin-top: 30px;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      min-height: 300px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }#retry-payment-modal {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  width: 90%;
+  max-width: 500px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+#retry-payment-modal h2 {
+  color: #ff2768;
+  margin-bottom: 15px;
+  font-size: 24px;
+}
+
+#retry-payment-modal label {
+  font-weight: bold;
+  display: block;
+  margin: 12px 0 6px;
+}
+
+#retry-payment-modal select,
+#retry-payment-modal input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-bottom: 15px;
+}
+
+#retry-payment-modal button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#retry-payment-modal button:first-of-type {
+  background: #28a745;
+  color: white;
+}
+
+#retry-payment-modal button:last-of-type {
+  background: #6c757d;
+  color: white;
+  margin-left: 10px;
+}
+
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background: #ff2768;
+      color: white;
+    }
+    .no-orders {
+      text-align: center;
+      color: #888;
+      font-size: 18px;
+      padding: 30px 0;
+    }
+    .star {
+    color: black;
+    font-size: 16px;
+  }
+  .star-gray {
+    color: lightgray;
+    font-size: 16px;
+  }
+  </style>
+</head>
+<body>
+
+  <h1>My Orders</h1>
+{% if messages %}
+  <ul style="color: green;">
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
+
+  <div class="order-buttons">
+    <button class="to-ship" onclick="showContent('ship')">To Ship</button>
+    <button class="to-receive" onclick="showContent('receive')">To Receive</button>
+    <button class="to-review" onclick="showContent('review')">To Review</button>
+    <button class="completed" onclick="showContent('completed')">My Reviews</button>
+    <button class="cancelable" onclick="showContent('cancelable')">Latest Orders</button>
+    
+    <button class="cancel-history" onclick="showContent('cancelled')">Cancelled Orders</button>
+  </div>
+
+  <div class="order-content" id="order-content">
+    <div class="no-orders">Select a category to view orders.</div></div>
+    <div id="to-receive-order-data" style="display: none;">
+  {% if to_receive_orders %}
+    <h2 style="color:#ff2768;">Orders To Receive</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>Date</th>
+          <th>Amount</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for order in to_receive_orders %}
+          <tr>
+            <td>
+              
+              <a href="javascript:void(0);" onclick="viewOrderDetails('{{ order.id }}')" 
+                 style="color: #ff2768; font-weight: bold;">
+                {{ order.id }}
+              </a>
+            </td>
+           
+         <td>
+  
+  {% localtime on %}{{ order.status_updated_at|date:"Y-m-d h:i A" }}{% endlocaltime %}
+</td>
+
+            <td>Rs. {{ order.grand_total }}</td>
+            <td>{{ order.status }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="no-orders">No shipping orders found.</div>
+  {% endif %}
+</div>
+
+<div id="to-review-order-data" style="display: none;">
+  {% if to_review_orders %}
+    <h2 style="color:#ff2768;">Products To Review</h2>
+    <table border="1" cellpadding="5" cellspacing="0">
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>Product</th>
+          <th>Image</th>
+          <th>Quantity</th>
+          <th>Your Review</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for order in to_review_orders %}
+          {% for item in order.items.all %}
+            {% if not item.is_reviewed %}
+              <tr>
+                 <td>
+              <a href="javascript:void(0);" onclick="viewOrderDetails('{{ order.id }}')" 
+                 style="color: #ff2768; font-weight: bold;">
+                {{ order.id }}
+              </a>
+            </td>
+                <td>{{ item.product_name }}</td>
+                <td><img src="{{ item.image_url }}" alt="{{ item.product_name }}" width="80"></td>
+                <td>{{ item.quantity }}</td>
+                <td>
+                  <form action="{% url 'submit_product_review' item.id %}" method="post" enctype="multipart/form-data"
+      style="display: flex; align-items: center; gap: 8px; padding: 8px; border: 1px solid #eee; border-radius: 10px; background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,0.05); font-size: 13px; flex-wrap: wrap;">
+  
+  {% csrf_token %}
+  
+
+  <textarea name="review_text" placeholder="Write review..." required
+            style="padding: 6px; border: 1px solid #ddd; border-radius: 6px; resize: none; font-size: 13px; height: 32px; width: 300px;"></textarea>
+  
+  
+  <select name="rating" style="padding: 3px 5px; border-radius: 6px; border: 1px solid #ccc; font-size: 12px; height: 32px;">
+    <option value="1">&#9733;</option>
+    <option value="2">&#9733;&#9733;</option>
+    <option value="3">&#9733;&#9733;&#9733;</option>
+    <option value="4">&#9733;&#9733;&#9733;&#9733;</option>
+    <option value="5">&#9733;&#9733;&#9733;&#9733;&#9733;</option>
+  </select>
+  
+
+  <input type="file" name="image" accept="image/*"
+         style="border: 1px solid #ddd; border-radius: 6px; padding: 3px; font-size: 12px; height: 32px; background: #fafafa;">
+  
+ 
+  <button type="submit" 
+          style="background: #ff2768; color: white; border: none; padding: 6px 10px; border-radius: 6px; font-size: 13px; font-weight: bold; cursor: pointer; transition: 0.3s; height: 32px;">
+    Submit
+  </button>
+</form>
+
+                </td>
+              </tr>
+            {% endif %}
+          {% endfor %}
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="no-orders">No products to review.</div>
+  {% endif %}
+</div>
+<div id="completed-order-data" style="display: none;">
+  {% if completed_orders %}
+    <h2 style="color:#ff2768;">My Reviews</h2>
+    <table border="1" cellpadding="10" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+      <thead style="background-color: #ff3366; color: white;">
+        <tr><th>Order ID</th>
+          <th>Product</th>
+          <th>Your Review</th>
+          <th>Rating</th>
+          <th>Review Image</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% with has_reviews=False %}
+          {% for order in completed_orders %}
+            {% for item in order.items.all %}
+              {% if item.review %}
+                {% if not has_reviews %}{% with has_reviews=True %}{% endwith %}{% endif %}
+                <tr> <td>
+              <a href="javascript:void(0);" onclick="viewOrderDetails('{{ order.id }}')" 
+                 style="color: #ff2768; font-weight: bold;">
+                {{ order.id }}
+              </a>
+            </td>
+                  <td>{{ item.product_name }}</td>
+                  <td>{{ item.review.review_text }}</td>
+                  <td>
+                    {% for i in "12345"|make_list %}
+                      {% if forloop.counter <= item.review.rating %}
+                        <span class="star">&#9733;</span>
+                      {% else %}
+                        <span class="star-gray">&#9733;</span>
+                      {% endif %}
+                    {% endfor %}
+                  </td>
+                  <td>
+                    {% if item.review.image %}
+                      <img src="{{ item.review.image.url }}" alt="Review Image" style="max-width: 80px; max-height: 80px;"/>
+                    {% else %}
+                      -
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endif %}
+            {% endfor %}
+          {% endfor %}
+          {% if not has_reviews %}
+            
+          {% endif %}
+        {% endwith %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="no-orders">No completed orders found.</div>
+  {% endif %}
+</div>
+
+
+
+
+  <div id="to-ship-order-data" style="display: none;">
+  {% if to_ship_orders %}
+    <h2 style="color:#ff2768;">Orders To Ship</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>Date</th>
+          <th>Amount</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for order in to_ship_orders %}
+          <tr>
+            <td>
+              <a href="javascript:void(0);" onclick="viewOrderDetails('{{ order.id }}')" 
+                 style="color: #ff2768; font-weight: bold;">
+                {{ order.id }}
+              </a>
+            </td>
+         
+         <td>
+  
+  {% localtime on %}{{ order.status_updated_at|date:"Y-m-d h:i A" }}{% endlocaltime %}
+</td>
+            <td>Rs. {{ order.grand_total }}</td>
+            <td>{{ order.status }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="no-orders">No confirmed orders found.</div>
+  {% endif %}
+</div>
+
+<div id="latest-order-data" style="display: none;">
+  {% if latest_orders %}
+    <h2 style="color:#ff2768;">Latest Orders (Cancelable within 24 hrs)</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>Date</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for order in latest_orders %}
+        
+          <tr id="order-row-{{ order.id }}">
+             <td>
+  <a href="javascript:void(0);" onclick="viewOrderDetails('{{ order.id }}')" style="color: #ff2768; font-weight: bold;">
+    {{ order.id }}
+  </a>
+</td>
+     
+         <td>
+  
+  {% localtime on %}{{ order.status_updated_at|date:"Y-m-d h:i A" }}{% endlocaltime %}
+</td>
+
+            <td>Rs. {{ order.grand_total }}</td>
+            <td id="status-{{ order.id }}">{{ order.status }}</td>
+            <td>
+           {% if order.status|lower == 'cancelled' or order.status|lower == 'cancelled by admin' %}
+  <button type="button" disabled
+          style="padding: 6px 12px; background: gray; color: white; border: none; border-radius: 6px; cursor: not-allowed;">
+    {{ order.status }}
+  </button>
+
+{% elif order.status|lower == 'payment re-upload requested' %}
+
+  <button type="button" onclick="cancelOrder('{{ order.id }}')"
+          style="padding: 6px 12px; background: red; color: white; border: none; border-radius: 6px; cursor: pointer;">
+    Cancel
+  </button>
+ {% if order.status|lower == 'payment re-upload requested' %}
+  <button onclick="retryPayment('{{ order.id }}')"
+          style="background: orange; color: white; padding: 6px 12px; border: none; border-radius: 6px;">
+    Retry Payment
+  </button>
+{% endif %}
+
+
+{% elif order.is_cancelable %}
+  <button type="button" onclick="cancelOrder('{{ order.id }}')"
+          style="padding: 6px 12px; background: red; color: white; border: none; border-radius: 6px; cursor: pointer;">
+    Cancel
+  </button>
+
+{% else %}
+  <button type="button" disabled
+          style="padding: 6px 12px; background: lightgray; color: white; border: none; border-radius: 6px; cursor: not-allowed;">
+    Not Cancelable
+  </button>
+{% endif %}
+
+
+
+
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="no-orders">No recent orders found.</div>
+  {% endif %}
+</div>
+<div id="cancelled-order-data" style="display: none;">
+  {% if cancelled_orders %}
+    <h2 style="color:#ff2768;">Cancelled Orders</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>Date</th>
+          <th>Amount</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for order in cancelled_orders %}
+          <tr>
+           <td>
+  <a href="javascript:void(0);" onclick="viewOrderDetails('{{ order.id }}')" style="color: #ff2768; font-weight: bold;">
+    {{ order.id }}
+  </a>
+</td>
+
+         <td>
+  {% if order.cancelled_at %}
+    {% localtime on %}{{ order.cancelled_at|date:"Y-m-d h:i A" }}{% endlocaltime %}
+  {% else %}
+    {% localtime on %}{{ order.status_updated_at|date:"Y-m-d h:i A" }}{% endlocaltime %}
+  {% endif %}
+</td>
+
+
+            <td>Rs. {{ order.grand_total }}</td>
+            <td style="color: green; font-weight: bold;">{{ order.status }}</td>
+
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="no-orders">No cancelled orders found.</div>
+  {% endif %}
+</div>
+<div id="order-details-modal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index: 1000;">
+  <h2 style="color: #ff2768;">Order Details</h2>
+  <div id="order-items-content">
+    Loading...
+  </div>
+  <button onclick="closeOrderDetails()" style="margin-top: 20px; padding: 10px 20px; background: #ff2768; color: white; border: none; border-radius: 6px;">
+    Close
+  </button>
+</div>
+
+<div id="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+  background: rgba(0, 0, 0, 0.5); z-index: 999;" onclick="closeOrderDetails()"></div>
+
+<div id="retry-payment-modal" data-order-id="" 
+     style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+     background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index: 1000; width: 90%; max-width: 500px;">
+  
+  <h2 style="color:#ff2768;">Retry Payment</h2>
+  
+  
+
+<div id="retry-payment-details" style="margin-bottom: 20px;">Loading...</div>
+<label><strong>Select Payment Method:</strong></label>
+<select id="payment-method" onchange="showPaymentInstructions()" sstyle="width: 100%; padding: 8px; border-radius: 6px; margin: 10px 0;">
+  <option value="easypaisa">EasyPaisa</option>
+  <option value="jazzcash">JazzCash</option>
+</select>
+
+<div id="payment-instructions" style="background: #f9f9f9; padding: 12px; border-left: 4px solid #ff2768; margin-bottom: 15px; display: none;">
+
+</div>
+
+  <label><strong>Upload Screenshot:</strong></label><br>
+  <input type="file" id="payment-screenshot" accept="image/*" style="margin: 10px 0;"><br>
+
+  <button onclick="submitRetryPayment()" 
+          style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 6px;">
+    Submit Payment
+  </button>
+
+  <button onclick="closeRetryPaymentModal()" 
+          style="padding: 10px 20px; background: gray; color: white; border: none; border-radius: 6px; margin-left: 10px;">
+    Cancel
+  </button>
+</div>
+
+<div id="retry-modal-overlay" 
+     style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+     background: rgba(0, 0, 0, 0.5); z-index: 999;" 
+     onclick="closeRetryPaymentModal()">
+</div>
+
+<script>
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+const csrftoken = getCookie('csrftoken');
+
+</script>
+
+
+  <script>
+  
+
+
+  function viewOrderDetails(orderId) {
+  document.getElementById('modal-overlay').style.display = 'block';
+  document.getElementById('order-details-modal').style.display = 'block';
+
+  const contentDiv = document.getElementById('order-items-content');
+  contentDiv.innerHTML = "Loading...";
+
+  fetch(`/order-details/${orderId}/`, {
+    method: 'GET',
+   
+    
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      let itemsHtml = `
+        <table style="width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Product</th>
+              <th>Quantity</th>
+              <th>Price</th>
+              <th>Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      data.items.forEach(item => {
+        itemsHtml += `
+          <tr>
+            <td><img src="${item.image_url}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;"></td>
+            <td>${item.product_name}</td>
+            <td>${item.quantity}</td>
+            <td>Rs. ${item.price.toFixed(2)}</td>
+            <td>Rs. ${item.subtotal.toFixed(2)}</td>
+          </tr>
+        `;
+      });
+
+      itemsHtml += `
+          </tbody>
+        </table>
+        <div style="margin-top: 15px; text-align: right; font-size: 18px; font-weight: bold;">
+          Grand Total (with shipping fee): Rs. ${data.grand_total.toFixed(2)}
+        </div>
+      `;
+
+      contentDiv.innerHTML = itemsHtml;
+    } else {
+      contentDiv.innerHTML = `<p style="color: red;">${data.message}</p>`;
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    contentDiv.innerHTML = "<p style='color:red;'>Failed to load order details.</p>";
+  });
+}
+
+
+function closeOrderDetails() {
+  document.getElementById('modal-overlay').style.display = 'none';
+  document.getElementById('order-details-modal').style.display = 'none';
+}
+
+
+  function showContent(type) {
+    document.querySelectorAll('.order-buttons button').forEach(btn => btn.classList.remove('active'));
+    const button = document.querySelector(`.order-buttons .${type}`);
+    if (button) button.classList.add('active');
+
+    const data = {
+     
+        ship: document.getElementById("to-ship-order-data").innerHTML,
+
+      
+      receive: document.getElementById("to-receive-order-data").innerHTML,
+        
+      review: document.getElementById("to-review-order-data").innerHTML,
+
+
+      
+      completed: document.getElementById("completed-order-data").innerHTML,
+
+    cancelable: document.getElementById("latest-order-data").innerHTML,
+
+
+    cancelled: document.getElementById("cancelled-order-data").innerHTML
+
+       
+    };
+
+    const content = document.getElementById('order-content');
+    content.innerHTML = "<p style='text-align:center;color:#ff2768;'>Loading Orders...</p>";
+
+    setTimeout(() => {
+      content.innerHTML = data[type] || "<div class='no-orders'>No data found for this section.</div>";
+      attachOrderDetailClickHandlers();
+    }, 300);
+  }
+
+  function submitProductReview(itemId) {
+  const textarea = document.getElementById(`review-text-${itemId}`);
+  const review = textarea.value.trim();
+
+  if (!review) {
+    alert("Please enter a review for this product.");
+    return;
+  }
+
+  fetch(`/submit-product-review/${itemId}/`, {
+    method: 'POST',
+    headers: {
+      'X-CSRFToken': csrftoken,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ review }),
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      alert("Thanks for your review!");
+      textarea.parentElement.innerHTML = `<p style="color: #444; font-style: italic;">"${review}"</p>`;
+    } else {
+      alert(data.message || "Review submission failed.");
+    }
+  })
+  .catch(err => {
+    console.error(err);
+    alert("Error submitting review.");
+  });
+}
+
+function cancelOrder(orderId) {
+  if (!confirm("Are you sure you want to cancel this order?")) return;
+
+  fetch(`/cancel-order/${orderId}/`, {
+    method: 'POST',
+    headers: {
+      'X-CSRFToken': csrftoken,
+      'Content-Type': 'application/json'
+    },
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      alert("Order " + orderId + " has been cancelled!");
+
+      
+      const orderRow = document.getElementById(`order-row-${orderId}`);
+      if (orderRow) {
+        orderRow.style.transition = "opacity 0.5s";
+        orderRow.style.opacity = 0;
+        setTimeout(() => orderRow.remove(), 500);
+      }
+
+      
+      const latestDataDiv = document.getElementById("latest-order-data");
+      const latestRow = latestDataDiv.querySelector(`#order-row-${orderId}`);
+      if (latestRow) latestRow.remove();
+
+      
+      const cancelledDataDiv = document.getElementById('cancelled-order-data');
+      const cancelledTbody = cancelledDataDiv.querySelector('tbody');
+      if (cancelledTbody) {
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+          <td><a href="javascript:void(0);" style="color: #ff2768; font-weight: bold;"
+                 onclick="viewOrderDetails('${orderId}')">${orderId}</a></td>
+          <td>${data.cancelled_at}</td>
+          <td>Rs. ${data.amount}</td>
+          <td style="color: red; font-weight: bold;">Cancelled</td>
+        `;
+        cancelledTbody.prepend(newRow);
+      }
+
+      
+      const latestTbody = latestDataDiv.querySelector('tbody');
+       if (!latestTbody || latestTbody.children.length === 0) {
+       latestDataDiv.innerHTML = '<div class="no-orders">No recent orders found.</div>';
+       }
+
+      }
+
+    else {
+      alert(data.message || "Failed to cancel order.");
+    }
+  })
+  .catch(error => {
+    console.error("Error cancelling order:", error);
+    alert("An error occurred while cancelling the order.");
+  });
+}
+
+
+function attachOrderDetailClickHandlers() {
+  const orderLinks = document.querySelectorAll('a[onclick^="viewOrderDetails"]');
+  orderLinks.forEach(link => {
+    const orderId = link.getAttribute('onclick').match(/'(\d+)'/)[1];
+    link.onclick = function() {
+      viewOrderDetails(orderId);
+    };
+  });
+}
+
+  
+</script>
+<script>
+function submitProductReview(itemId) {
+  const textarea = document.getElementById(`review-text-${itemId}`);
+  const review = (textarea ? textarea.value : "").trim();
+
+  if (!review) {
+    alert("Please write your review first.");
+    return;
+  }
+
+  fetch(`/submit-product-review/${itemId}/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": getCookie("csrftoken")
+    },
+    body: JSON.stringify({ review })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      alert("Thanks! Your review has been submitted.");
+     
+      const row = document.getElementById(`review-row-${itemId}`);
+      if (row) row.remove();
+
+      
+      const tbody = document.querySelector('#order-content tbody');
+      if (tbody && tbody.children.length === 0) {
+        document.getElementById('order-content').innerHTML = '<div class="no-orders">No delivered products to review.</div>';
+      }
+    } else {
+      alert(data.message || "Review submission failed.");
+    }
+  })
+  .catch(err => {
+    console.error(err);
+    alert("Error submitting review.");
+  });
+}
+</script>
+
+<script>
+function retryPayment(orderId) {
+  document.getElementById('retry-modal-overlay').style.display = 'block';
+  document.getElementById('retry-payment-modal').style.display = 'block';
+
+  const detailsDiv = document.getElementById('retry-payment-details');
+  detailsDiv.innerHTML = "Loading...";
+
+
+  document.getElementById('retry-payment-modal').dataset.orderId = orderId;
+
+  
+  detailsDiv.innerHTML = `Retrying for Order ${orderId}`;
+}
+
+function closeRetryPaymentModal() {
+  document.getElementById('retry-modal-overlay').style.display = 'none';
+  document.getElementById('retry-payment-modal').style.display = 'none';
+}
+
+
+
+function submitRetryPayment() {
+  const orderId = document.getElementById('retry-payment-modal').dataset.orderId;
+  const method = document.getElementById('payment-method').value;
+  const file = document.getElementById('payment-screenshot').files[0];
+
+  if (!file) {
+    alert("Please upload a screenshot.");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('payment_method', method);
+  formData.append('screenshot', file);
+
+  fetch(`/retry-payment/${orderId}/`, {
+    method: 'POST',
+    headers: {
+      'X-CSRFToken': csrftoken,
+    },
+    body: formData,
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      alert("Payment re-uploaded!");
+      closeRetryPaymentModal();
+
+      const statusCell = document.getElementById(`status-${orderId}`);
+      if (statusCell) statusCell.innerText = "Payment Re-uploaded";
+    } else {
+      alert(data.message || "Retry failed.");
+    }
+  })
+  .catch(err => {
+    console.error(err);
+    alert("Error retrying payment.");
+  });
+}
+</script>
+
+<script>
+function showPaymentInstructions() {
+  const method = document.getElementById("payment-method").value;
+  const instructionsDiv = document.getElementById("payment-instructions");
+  
+  let info = "";
+
+  if (method === "easypaisa") {
+    info = `
+      <strong>EasyPaisa Account Info:</strong><br>
+      Account Number: <code>03115230429</code><br>
+      Account Holder: <strong>Admin Name</strong>
+    `;
+  } else if (method === "jazzcash") {
+    info = `
+      <strong>JazzCash Account Info:</strong><br>
+      Account Number: <code>03425462477</code><br>
+      Account Holder: <strong>Admin Name</strong>
+    `;
+  }
+
+  instructionsDiv.innerHTML = info;
+  instructionsDiv.style.display = "block";
+}
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  showPaymentInstructions();
+});
+</script>
+
+</body>
+</html>

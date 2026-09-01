@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Chat - {{ product.name }}</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+   * { margin: 0;
+     padding: 0; 
+     box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif; 
+  }
+
+   body { background-color: #fff5f4;
+     display: flex;
+      justify-content: center;
+       align-items: center;
+        height: 100vh; 
+      }
+   .chat-box { width: 600px;
+     height: 700px;
+      background-color: #ffffff;
+       border: 2px solid #ffd6d1;
+     border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1); 
+      display: flex; 
+      flex-direction: column; 
+      overflow: hidden; 
+    }
+   .chat-header { background-color: #ffe5e2;
+    padding: 15px;
+    text-align: center;
+    color: #ff2768;
+    font-weight: bold;
+    font-size: 18px;
+    border-bottom: 2px solid #ffd6d1; 
+        }
+   .chat-messages { flex: 1; 
+    padding: 20px; 
+    overflow-y: auto; 
+    background-color: #fffaf9; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 10px; 
+  }
+   .message { max-width: 70%; 
+    padding: 10px 15px; 
+    border-radius: 15px; 
+    font-size: 14px; 
+    line-height: 1.4;
+     position: relative; 
+     display: inline-block; 
+    }
+   .received { background-color: #ffe5e2; 
+    color: #ff2768;
+     align-self: flex-start;
+     }
+   .sent { background-color: #ff2768; 
+    color: white;
+     align-self: flex-end;
+     }
+   .msg-time { font-size: 11px; 
+    margin-top: 4px; 
+    display: block; 
+    text-align: right; 
+    opacity: 0.7; 
+  }
+   .sent .msg-time { color: #f0f0f0; }
+   .chat-input { display: flex; 
+    padding: 15px; 
+    background-color: #fff; 
+    border-top: 2px solid #ffd6d1; 
+  }
+   .chat-input input { flex: 1;
+     padding: 10px 15px; 
+     border: 2px solid #ffd6d1; 
+     border-radius: 25px; 
+     outline: none; 
+     font-size: 14px; 
+    }
+   .chat-input button { margin-left: 10px; 
+    background-color: #ff2768; 
+    color: white; 
+    border: none; 
+    padding: 10px 16px; 
+    border-radius: 50%; 
+    cursor: pointer; 
+    transition: background 0.3s ease; 
+  }
+   .chat-input button:hover { 
+    background-color: #ff2768; 
+  }
+  </style>
+</head>
+<body>
+<div class="chat-box" >
+  <div class="chat-header">
+    {% if sender_type == "customer" %}
+      Chat with seller {{ seller.name }}
+    {% else %}
+      Chat with customer {{ customer.name }}
+    {% endif %}
+    about {{ product.name }}
+  </div>
+
+  <div class="chat-messages" id="chat-messages">
+    {% for msg in messages %}
+      <div class="message {% if msg.sender_type == sender_type %}sent{% else %}received{% endif %}">
+        {{ msg.text }}
+        <span class="msg-time">{{ msg.timestamp|date:"g:i A" }}</span>
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="chat-input">
+    <form id="chat-form" style="display:flex;width:100%">
+      {% csrf_token %}
+      <input type="hidden" name="sender_type" value="{{ sender_type }}">
+      <input type="text" id="message-input" name="message" placeholder="Type your message..." required>
+      <button type="submit"><i class="fas fa-paper-plane"></i></button>
+    </form>
+  </div>
+</div>
+
+<script>
+  const chatForm = document.getElementById("chat-form");
+  const chatMessages = document.getElementById("chat-messages");
+  const messageInput = document.getElementById("message-input");
+
+  chatForm.addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const formData = new FormData(chatForm);
+
+    fetch("{% url 'send_message' room.id %}", {
+      method: "POST",
+      headers: { "X-CSRFToken": formData.get("csrfmiddlewaretoken") },
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+     
+      const msgDiv = document.createElement("div");
+      msgDiv.classList.add("message", "sent");
+      msgDiv.innerHTML = `${data.text} <span class="msg-time">${data.time}</span>`;
+      chatMessages.appendChild(msgDiv);
+
+      
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+
+      
+      messageInput.value = "";
+    });
+  });
+
+  
+  setInterval(() => {
+    fetch("{% url 'get_messages' room.id %}")
+    .then(response => response.json())
+    .then(data => {
+      chatMessages.innerHTML = "";
+      data.messages.forEach(m => {
+        const msgDiv = document.createElement("div");
+        msgDiv.classList.add("message", m.sender_type === "{{ sender_type }}" ? "sent" : "received");
+        msgDiv.innerHTML = `${m.text} <span class="msg-time">${m.time}</span>`;
+        chatMessages.appendChild(msgDiv);
+      });
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    });
+  }, 3000);
+</script>
+</body>
+</html>

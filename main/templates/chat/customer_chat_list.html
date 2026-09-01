@@ -1,0 +1,143 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Chats</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #ece5dd;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+    }
+    .container {
+      width: 100%;
+      max-width: 720px;
+      background: #fff;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid #ccc;
+    }
+    header {
+      background: #ff2768;
+      color: white;
+      padding: 16px;
+      font-size: 20px;
+      font-weight: bold;
+      position: sticky;
+      top: 0;
+    }
+    .chat-list {
+      flex: 1;
+      overflow-y: auto;
+      background: #fff;
+    }
+    .chat-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px;
+      border-bottom: 1px solid #f0f0f0;
+      text-decoration: none;
+      color: #000;
+    }
+    .chat-item:hover { background: #f5f5f5; }
+    .chat-left { display: flex; gap: 12px; }
+    .chat-left img {
+      width: 50px; height: 50px;
+      border-radius: 50%; object-fit: cover;
+    }
+    .chat-info { display: flex; flex-direction: column; }
+    .name { font-weight: bold; font-size: 16px; }
+    .last-msg {
+      font-size: 14px; color: #555;
+      max-width: 200px; white-space: nowrap;
+      overflow: hidden; text-overflow: ellipsis;
+    }
+    .chat-right {
+      display: flex; flex-direction: column;
+      align-items: flex-end; min-width: 60px;
+    }
+    .chat-time { font-size: 12px; color: #999; }
+    .unread-badge {
+      background: #25D366; color: white;
+      font-size: 12px; font-weight: bold;
+      padding: 4px 7px; border-radius: 50%;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <header>My Chats</header>
+  <div class="chat-list" id="chatList">
+    {% for chat in chats %}
+      <a href="{% url 'chat_room_customer' chat.product.id chat.seller.id %}" 
+         class="chat-item" data-room-id="{{ chat.id }}">
+        <div class="chat-left">
+          {% if chat.seller.profile_image %}
+  <img src="{{ chat.seller.profile_image.url }}" alt="Profile">
+{% else %}
+  <img src="{% static 'images/default_profile.jpeg' %}" alt="Default Profile">
+{% endif %}
+          <div class="chat-info">
+            <span class="name">{{ chat.seller.name }}</span>
+            <span class="last-msg">
+              {% if chat.last_message %} {{ chat.last_message.text }} {% else %} No messages yet. {% endif %}
+            </span>
+          </div>
+        </div>
+        <div class="chat-right">
+          <div class="chat-time">
+            {% if chat.last_message %} {{ chat.last_message.timestamp|date:"g:i A" }} {% endif %}
+          </div>
+          {% if chat.unread_count > 0 %}
+            <div class="unread-badge">{{ chat.unread_count }}</div>
+          {% endif %}
+        </div>
+      </a>
+    {% empty %}
+      <p style="padding:20px; text-align:center; color:#777;">No chats yet.</p>
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+function refreshChats() {
+  fetch("{% url 'refresh_chat_list_customer' %}")
+    .then(res => res.json())
+    .then(data => {
+      let chatList = document.getElementById("chatList");
+      chatList.innerHTML = "";
+
+      
+      data.chats.sort((a, b) => new Date(b.time) - new Date(a.time));
+
+      data.chats.forEach(chat => {
+        let unread = chat.unread_count > 0 ? `<div class="unread-badge">${chat.unread_count}</div>` : "";
+        let html = `
+          <a href="/customer/${chat.product_id}/${chat.seller_id}/" class="chat-item" data-room-id="${chat.room_id}">
+            <div class="chat-left">
+              <img src="${chat.seller_image}" alt="Profile">
+              <div class="chat-info">
+                <span class="name">${chat.seller_name}</span>
+                <span class="last-msg">${chat.last_message || "No messages yet."}</span>
+              </div>
+            </div>
+            <div class="chat-right">
+              <div class="chat-time">${chat.time || ""}</div>
+              ${unread}
+            </div>
+          </a>
+        `;
+        chatList.innerHTML += html;
+      });
+    });
+}
+setInterval(refreshChats, 3000);
+</script>
+</body>
+</html>

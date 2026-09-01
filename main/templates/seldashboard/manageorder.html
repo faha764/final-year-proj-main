@@ -1,0 +1,302 @@
+{% csrf_token %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Order</title>
+  <style>
+    
+
+    .container {
+      width: 90%;
+      margin: 20px auto;
+      padding: 20px;
+      
+    }
+
+    h2 {
+      text-align: center;
+      color: #ff2768; 
+      font-weight: bold;
+      
+    }
+
+   
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: white; 
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    table th, table td {
+      padding: 10px;
+      text-align: center;
+      border: 1px solid white; 
+      color: black; 
+    }
+
+    table th {
+      background-color: #ff2768;
+      color: white; 
+    }
+
+    table td {
+      background-color: white; 
+    }
+
+    
+    button {
+      padding: 8px 16px;
+      font-size: 14px;
+      margin: 5px;
+      cursor: pointer;
+      border: none;
+      border-radius: 4px;
+      background-color: #ff2768; 
+      color: white;
+    }
+     #orderModal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;  
+    background-color: rgba(0, 0, 0, 0.5); 
+  }
+
+
+  .modal-content {
+    background-color: #fff;
+    margin: 5% auto;
+    padding: 20px;
+    border-radius: 8px;
+    width: 500px;
+    max-height: 80vh;
+    overflow-y: auto; 
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    position: relative;
+  }
+
+  
+  .close-btn {
+    color: #aaa;
+    float: right;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .close-btn:hover {
+    color: #000;
+  }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Manage Order</h2>
+
+   
+    <table id="ordersTable">
+      <thead>
+        <th>Order ID</th>
+<th>Customer Name</th>
+<th>Address</th>
+<th>City</th>
+<th>Phone</th>
+<th>E-mail</th>
+<th>Status</th>
+<th>Actions</th>
+<th>View Orders</th>
+
+      </thead>
+      <tbody>
+       
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+   
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
+  
+
+   function setupManageOrders() {
+   
+  fetch('/api/seller/orders/', { credentials: 'same-origin' })
+
+
+    .then(response => response.json())
+    .then(data => {
+      window.orders = data;
+      renderOrders();
+    })
+    .catch(error => {
+      console.error("Error fetching orders:", error);
+      alert("Failed to load orders.");
+    });
+  }
+  
+  
+  function updateOrderStatus(orderId, newStatus) {
+  const csrftoken = getCookie('csrftoken');
+
+  fetch(`/api/seller/orders/${orderId}/update_status/`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': csrftoken, 
+    },
+    credentials: 'same-origin', 
+    body: JSON.stringify({ status: newStatus })
+  })
+  .then(response => {
+    if (!response.ok) throw new Error('Failed to update status');
+    return response.json();
+  })
+  .then(data => {
+    alert("Order updated to: " + data.new_status);
+    setupManageOrders();
+  })
+  .catch(error => {
+    console.error("Error updating status:", error);
+    alert("Status update failed.");
+  });
+}
+
+
+
+function notifyAdmin(orderId) {
+  alert(`Notify admin to release payment of order ${orderId}`);
+  
+}
+
+function renderOrders() {
+  const ordersTableBody = document.querySelector("#ordersTable tbody");
+  ordersTableBody.innerHTML = "";
+
+orders
+  .sort((a, b) => b.id - a.id) 
+  .forEach(order => {
+
+    console.log("Order ID:", order.id, "Status:", order.status);
+
+    const shipping = order.shipping;
+    const status = order.status.toLowerCase(); 
+
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${order.id}</td>
+      <td>${shipping.full_name}</td>
+      <td>${shipping.address}</td>
+      <td>${shipping.city}</td>
+      <td>${shipping.phone}</td>
+      <td>${shipping.email}</td>
+      <td>${order.status}</td>
+ <td>
+  ${
+    status === "confirmed"
+      ? `<button onclick="updateOrderStatus(${order.id}, 'shipping')">Mark as Shipping</button>`
+      : status === "shipping"
+      ? `<button onclick="updateOrderStatus(${order.id}, 'delivered')">Mark as Delivered</button>`
+      
+      
+      : (status === "cancelled" || status === "cancelled by admin")
+      ? `<span style="color:green;">Order Cancelled (No action needed)</span>`
+      : status === "payment re-upload requested"
+      ? `<span style="color:orange;">Wait for Admin Confirmation</span>`
+      : `<button disabled style="background:#ccc; cursor:not-allowed;">Ship</button>`
+  }
+</td>
+
+
+
+      <td>
+        <button onclick="viewOrder(${order.id})">View</button>
+      </td>
+    `;
+    ordersTableBody.appendChild(row);
+  });
+}
+
+
+ function viewOrder(orderId) {
+  fetch(`/api/seller/orders/${orderId}/details/`)
+
+    .then(response => response.json())
+    .then(data => {
+      const { items } = data;  
+
+      let content = `
+        <h4>Order Items</h4>
+      `;
+
+      items.forEach(item => {
+        content += `
+          <div style="margin-bottom:15px;">
+            <img src="${item.image}" style="width:80px; height:80px; object-fit:cover; border-radius:5px;">
+            <div><strong>${item.name}</strong></div>
+            <div>Quantity: ${item.quantity}</div>
+            <div>Total Price: PKR ${item.total_price}</div>
+          </div>
+          <hr>
+        `;
+      });
+
+      document.getElementById("orderDetailsContent").innerHTML = content;
+      document.getElementById("orderModal").style.display = "block";
+    })
+    .catch(error => {
+      console.error("Error loading order detail:", error);
+      alert("Failed to load order details.");
+    });
+}
+
+  function closeModal() {
+    document.getElementById("orderModal").style.display = "none";
+  }
+
+function closeModal() {
+  document.getElementById("orderModal").style.display = "none";
+}
+
+
+
+
+  setupManageOrders();
+
+  </script>
+  
+<div id="orderModal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeModal()">&times;</span>
+    <h3>Order Details</h3>
+    <div id="orderDetailsContent">
+      
+    </div>
+  </div>
+</div>
+
+
+</body>
+</html>

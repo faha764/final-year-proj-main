@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Category</title>
+  <style>
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      background:#ffc6c3
+    }
+    h1 {
+      text-align: center;
+      color: #ff2768;
+    }
+    input, button {
+      padding: 10px;
+      margin: 10px 0;
+      width: 25%;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+    .btn {
+      background: #ff2768;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background: #e01f5b;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Edit Category</h1>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="btn">Update</button>
+    </form>
+  </div>
+</body>
+</html>

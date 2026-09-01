@@ -1,0 +1,234 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color:#ffc6c3;
+            margin: 0;
+            padding: 0;
+        }
+        .cart-container {
+            max-width: 800px;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .cart-header {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff2768;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ff2768;
+            padding-bottom: 10px;
+        }
+        .cart-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        .cart-item img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        .item-details {
+            flex: 1;
+            margin-left: 15px;
+        }
+        .item-details h4 {
+            margin: 5px 0;
+            font-size: 18px;
+        }
+        .item-details p {
+            color: #555;
+            margin: 5px 0;
+        }
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+        }
+        .quantity-controls button {
+            background: #ff2768;
+            border: 1px solid #ff2768;
+            color: white;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 0 5px;
+        }
+        .quantity {
+            width: 50px;
+            padding: 5px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .remove-btn {
+            background: #ff2768;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .cart-total {
+            text-align: right;
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 20px;
+            color: #ff2768;
+        }
+        .shipping-fee {
+            text-align: right;
+            font-size: 14px;
+            color: black;
+            margin-top: 10px;
+        }
+        .final-total {
+            text-align: right;
+            font-size: 22px;
+            font-weight: bold;
+            color: #ff2768;
+            margin-top: 10px;
+        }
+        .checkout-btn {
+            display: block;
+            width: 100%;
+            background: #ff2768;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .product-checkbox {
+            transform: scale(1.5);
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="cart-container">
+        <div class="cart-header">Shopping Cart </div>
+        <div class="cart-items">
+            <div class="cart-item" data-price="99">
+                <input type="checkbox" class="product-checkbox">
+                <img src="necklace.jpg" alt="Product Image">
+                <div class="item-details">
+                    <h4>Handmade Necklace</h4>
+                    <p>Price: Rs.99</p>
+                    <div class="quantity-controls">
+                        <button class="decrease">-</button>
+                        <input type="text" value="1" class="quantity" readonly>
+                        <button class="increase">+</button>
+                    </div>
+                </div>
+                <button class="remove-btn">Remove</button>
+            </div>
+            <div class="cart-item" data-price="400">
+                <input type="checkbox" class="product-checkbox">
+                <img src="mug.webp" alt="Product Image">
+                <div class="item-details">
+                    <h4>Customizable Mug</h4>
+                    <p>Price: Rs.400</p>
+                    <div class="quantity-controls">
+                        <button class="decrease">-</button>
+                        <input type="text" value="1" class="quantity" readonly>
+                        <button class="increase">+</button>
+                    </div>
+                </div>
+                <button class="remove-btn">Remove</button>
+            </div>
+            <div class="cart-item" data-price="150">
+                <input type="checkbox" class="product-checkbox">
+                <img src="gkhaf_512.jpg" alt="Product Image">
+                <div class="item-details">
+                    <h4>Keychains</h4>
+                    <p>Price: Rs.150</p>
+                    <div class="quantity-controls">
+                        <button class="decrease">-</button>
+                        <input type="text" value="1" class="quantity" readonly>
+                        <button class="increase">+</button>
+                    </div>
+                </div>
+                <button class="remove-btn">Remove</button>
+            </div>
+        </div>
+        <div class="cart-total">Subtotal: Rs.<span id="subtotal-price">0</span></div>
+        <div class="shipping-fee">Shipping Fee: Rs.<span id="shipping-price">0</span></div>
+        <div class="final-total">Total: Rs.<span id="total-price">0</span></div>
+        <button class="checkout-btn" id="checkout-btn">Proceed to Checkout</button>
+    </div>
+    <script>
+        function updateTotal() {
+            let subtotal = 0;
+            let shipping = 0;
+            let hasSelectedItems = false;
+            
+            document.querySelectorAll(".cart-item").forEach(item => {
+                if (item.querySelector(".product-checkbox").checked) {
+                    let price = parseInt(item.getAttribute("data-price"));
+                    let quantity = parseInt(item.querySelector(".quantity").value);
+                    subtotal += price * quantity;
+                    hasSelectedItems = true;
+                }
+            });
+
+            // Apply shipping fee only if an item is selected
+            shipping = hasSelectedItems ? 145 : 0;
+
+            document.getElementById("subtotal-price").innerText = subtotal;
+            document.getElementById("shipping-price").innerText = shipping;
+            document.getElementById("total-price").innerText = subtotal + shipping;
+        }
+
+        document.addEventListener("click", function(event) {
+            if (event.target.classList.contains("increase")) {
+                let input = event.target.previousElementSibling;
+                input.value = parseInt(input.value) + 1;
+                updateTotal();
+            } else if (event.target.classList.contains("decrease")) {
+                let input = event.target.nextElementSibling;
+                if (parseInt(input.value) > 1) {
+                    input.value = parseInt(input.value) - 1;
+                    updateTotal();
+                }
+            }
+        });
+
+        document.getElementById("checkout-btn").addEventListener("click", function () {
+            let selectedItems = [];
+            document.querySelectorAll(".cart-item").forEach(item => {
+                if (item.querySelector(".product-checkbox").checked) {
+                    let name = item.querySelector("h4").innerText;
+                    let price = parseInt(item.getAttribute("data-price"));
+                    let quantity = parseInt(item.querySelector(".quantity").value);
+                    let imageSrc = item.querySelector("img").src;
+                    selectedItems.push({ name, price, quantity, image: imageSrc });
+                }
+            });
+
+            localStorage.setItem("cart", JSON.stringify(selectedItems));
+            window.location.href = "checkoutook.html";
+        });
+
+        document.querySelectorAll(".product-checkbox").forEach(cb => {
+            cb.addEventListener("change", updateTotal);
+        });
+
+    </script>
+</body>
+</html>
+

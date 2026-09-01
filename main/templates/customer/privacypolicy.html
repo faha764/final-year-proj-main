@@ -1,0 +1,508 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Privacy Policy</title>
+  <style>
+    * { 
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f8c8c4;
+        }
+
+    
+    
+    
+.header-container {
+  background-color: #ffb6b3; 
+  display: flex;
+  
+  align-items: center;
+  padding: 15px 50px; 
+}
+
+ header {
+    background: #ffb6b3;
+    display: flex;
+    align-items: center;
+    padding: 15px 50px; 
+}
+
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.logo img {
+    width: 50px;
+    height: auto;
+    background-color: #f8c8c4;
+    padding: 5px;
+    border-radius: 50%;
+}
+
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 20px;
+}
+.search-bar input {
+    padding: 8px;
+    width: 200px;
+    font-weight: bold;
+    font-size: 14px;
+    border: 2px solid #ff6685;
+    border-radius: 5px;
+}
+.search-bar button {
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: bold;
+    background: #ff2768;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+
+nav {
+    margin-left: auto; 
+}
+.nav-link, a {
+    color: black;
+    text-decoration: none;
+    margin-right: 12px;
+    font-size: 13px;
+    font-weight: none;
+}
+.nav-link:hover,
+a:hover {
+    color: #555;
+    text-decoration: underline;
+}
+i {
+    margin-right: 5px;
+}
+
+.closeBtn {
+  float: left;
+  font-size: 22px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+
+
+.category-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+.category-modal ul,
+.category-modal ul li {
+  list-style: none;
+}
+
+  .category-modal {
+    display: none;
+    position: absolute;
+    top: 100%; 
+    left: 0;
+    width: 280px; 
+    background: #fff7f8;
+    padding: 20px 10px 10px 20px;
+    margin: 2px auto;
+    margin-bottom: 2px;
+    border-spacing: 0;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    border: 2px solid #ff2768;
+    z-index: 9999;
+  }
+
+  .modal-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .modal-content li a {
+    font-size: 15px;
+    font-weight: bold;
+    color: #b0374e;
+    background-color: #ffe5e2;
+    padding: 4px 12px;
+    border-radius: 8px;
+    text-align: center;
+    transition: all 0.3s ease;
+    display: block;
+    
+  }
+
+  .modal-content li a:hover {
+    background-color: #ff2768;
+    color: white;
+  }
+
+  .modal-content .close {
+    float: right;
+    font-size: 18px;
+    color: #e6003d;
+    cursor: pointer;
+    margin-bottom: 10px;
+  }
+
+.cart-section {
+  display: flex;
+  align-items: center;
+  gap:5px;
+}
+
+.cart-icon:hover{
+  transform: scale(1.1);
+}
+.cart-box {
+  padding: 20px;
+  border-radius: 10px; 
+  display: inline-block;
+}
+
+.cart-img {
+  width: 40px;   
+  height: 40px;
+}
+
+
+.join-seller-btn {
+  background-color: none;
+ 
+  
+  
+}
+.page-wrapper {
+  display: flex;
+  justify-content: center;   
+  align-items: center;       
+  min-height: 0vh;         
+   padding-bottom: 100px; 
+}
+
+.container {
+  max-width: 900px;
+  margin: 40px auto;
+  background: linear-gradient(135deg, #fff4f5, #ffecec);
+  padding: 40px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  border-radius: 16px;
+  margin-bottom: 30px;
+  
+}
+
+h1 {
+  text-align: center;
+  color: #d62f53;
+  margin-bottom: 25px;
+  font-size: 32px;
+  letter-spacing: 1px;
+}
+
+h2 {
+  color: #b4203a;
+  font-size: 22px;
+  margin-top: 30px;
+  margin-bottom: 12px;
+  border-left: 4px solid #ff2768;
+  padding-left: 12px;
+}
+
+p {
+  font-size: 16px;
+  line-height: 1.8;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+ul {
+  margin-left: 25px;
+  padding-left: 5px;
+}
+
+li {
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: #444;
+  line-height: 1.6;
+  list-style-type: disc;
+}
+
+.contact {
+  background: #ffe6eb;
+  padding: 20px;
+  border-left: 5px solid #ff2768;
+  border-radius: 10px;
+  margin-top: 25px;
+  font-size: 16px;
+}
+
+   footer {
+      background: #ff2768;
+      padding: 6px;
+      text-align: center;
+      font-size: 20px;
+      color: white;
+      width: 100%;
+      margin-top: auto;
+    }
+
+    .footer-links {
+      margin-bottom: 10px;
+      color: white;
+    }
+
+    .footer a {
+      color: rgba(10, 9, 9, 0.829);
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: 500;
+      font-size: 20px;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+      color: white;
+    }
+    @keyframes fadeInSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+  </style>
+</head>
+<body>
+    <header>
+        
+              <div class="logo">
+                        <img src="{% static 'images/logo.jpeg' %}" alt="Logo">
+        </div>
+
+        
+        
+        <form action="{% url 'search_products' %}" method="GET" class="search-bar">
+    <input type="text" name="q" placeholder="Search..." required>
+    <button type="submit"><i class="fas fa-search"></i></button>
+</form>
+        <nav>
+            <ul>
+              <nav class="header-nav">
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+           
+             <a href="{% url 'homeee' %}" data-url="{% url 'homeee' %}" onclick="loadPage(event, this.dataset.url)">
+              <i class="fas fa-home"></i> Home</a>
+             <div class="category-wrapper">
+                <a href="#" class="nav-link" onclick="toggleCategoryModal(event)">
+                  <i class="fas fa-bars"></i>Category
+                </a>
+                <div id="categoryModal" class="category-modal">
+
+<div class="modal-content">
+  <span class="close" onclick="closeCategoryModal()"><i class="fas fa-times"></i></span>
+  <ul>
+    {% for category in categories %}
+      <li>
+        <a href="{% url 'category_products' category.id %}">
+          <i class="{{ category.icon_class }}"></i> {{ category.name }}
+        </a>
+      </li>
+    {% empty %}
+      <li>No categories available</li>
+    {% endfor %}
+  </ul>
+</div>
+                   </div>
+                  </div>
+                </div>
+                
+                <a href="{% url 'custsignup' %}" data-url="{% url 'custsignup' %}" onclick="loadPage(event, this.dataset.url)">
+                  <i class="fas fa-info-circle"></i>Sign Up</a>
+                  <a href="{% url 'custlogin' %}" data-url="{% url 'custlogin' %}" onclick="loadPage(event, this.dataset.url)">
+                <i class="fas fa-user-circle"></i>  Login</a>
+              
+                <a href="{% url 'cart_vie' %}" data-url="{% url 'cart_vie' %}" onclick="loadPage(event, this.dataset.url)">
+                  <i class="fas fa-shopping-cart"></i> Cart</a>
+              
+                <a href="{% url 'wishlistok' %}" data-url="{% url 'wishlistok' %}" onclick="loadPage(event, this.dataset.url)">
+                  <i class="fas fa-heart"></i> Wishlist</a>
+              
+               
+              
+               {% if request.session.seller_id %}
+ 
+  <a href="{% url 'seller_redirect' %}">
+    <i class="fas fa-user"></i> Sell
+  </a>
+  <a href="{% url 'sellerlogout' %}">
+    <i class="fas fa-sign-out-alt"></i> Logout
+  </a>
+{% else %}
+  
+  <a href="{% url 'sellersignup' %}">
+    <i class="fas fa-user-plus"></i> Join as Seller
+  </a>
+  <a href="{% url 'sellerlogin' %}">
+    <i class="fas fa-sign-in-alt"></i> Login
+  </a>
+{% endif %}
+                               </nav>
+               </ul>
+
+       
+    </header>
+
+  <div class="container">
+    <h1>Privacy Policy</h1>
+   <h2>Introduction </h2> 
+<p>Welcome to CRAFTIFY marketplace for women artist. We respect your privacy and protect your personal information whether you are a customer or seller. This policy explains what data we collect, how we use it, and your rights.</p>
+<h2>Data We Collect</h2>
+  <h3>For Customer:</h3>
+<p><ul><li> Name </li>
+   <li> Contact info (email, phone number).</li>
+   <li> Payment details (jazzcash, easypaisa).</li>
+   <li>Transaction data (orders, payments).</li>
+   <li>Shipping data.</ul></p>
+  <h3>For Seller:</h3>
+   <p><ul><li>Contact info (email, phone number).</li>
+   <li>Transaction and product data.</li>
+   </ul></p>
+<h2>How We Use Your Data</h2>
+<h3>Customer:</h3>
+<p><ul><li>  Process orders and payments.</li>
+   <li>Deliver products.</li>
+   <li>Handle queries and complaints.</li></ul></p>
+  <h3>Seller:</h3>
+    <p><ul><li>  Order and payment process.</li>
+    <li> Handle queries and complaints.</li></ul>
+  <h2>Customer Policy</h2>
+ <p><ul><li>Provide accurate personal info.</li>
+    
+    <li>Provide accurate delivery details.</li>
+    <li>Give honest feedback.</li>
+    <li>Don't misuse platform.</li>
+    <li>Account suspension possible for rule breaking.</li>
+    <li>Once the order has been placed, customer can cancel the order within 24 hours.</li></ul>
+    </p>
+    <h2>Seller Policy</h2>
+    <p><ul><li>Provide accurate business & personal info.</li>
+     
+      
+      <li>Respond promptly to customer queries.</li>
+      
+      <li>Craftify can suspend or block accounts for violations.</li>
+      
+      <li>Craftify will release the seller's payment within 7 days after the customer will recieve the order.</li>
+      <li>10% commission will be deducted from the total payment before releasing it to the seller.</li>
+      <li>Seller can also have option to request the admin about the cancellation of order with valid reason, so that the admin will inform the customer about the order cancellation, and the customer will claim 100% refund from the app.</li></ul>
+    </p>
+    <h2>Shipping and Courier Information (For Sellers)</h2>
+    <p><ul><li>Sellers may use courier companies like TCS, Leopards, or others for deliveries.</li>
+       
+       <li>CRAFTIFY is not responsible for courier delays or issues.</li>
+       <li>If needed seller must share courier tracking info with admin.</li>
+</ul>
+    </p>
+    <h2>Order Delivery & Payment Settlement Policy </h2>
+    <p>To ensure fair dealings for both sellers and customers, CRAFTIFY follows these rules for delivery and payment handling:</p>
+    <h3>1. Timely Delivery by Seller</h3>
+    <p><ul><li>Sellers must deliver the product within the defined timeline.</li></ul>
+       
+   </p>
+   <h3>2. If customer Doesn't Receive the Order on Time</h3>
+   <p><ul><li>If a customer does not receive their order on time, they should contact with the seller within  3 days of the delivery date.</li>
+    <li>If the seller does not respond, the customer should report the issue to CRAFTIFY Support.</li></ul>
+   </p>
+   <h3>3. If customer Does Not Report Within 3 Days</h3>
+   <p> If the customer does not report any issue within 3 days after the expected delivery date:
+    <ul><li>It will be considered that the order was successfully delivered.</li>
+    <li>The seller will receive the payment.</li>
+    <li>After these 3 days, CRAFTIFY will not accept any complaints or refund requests for that order.</li></ul>
+   </p>
+   <h3>4. Purpose of This Rule</h3>
+   <p><ul><li>This policy helps avoid misuse or confusion.</li>
+      <li>It ensures that sellers are paid fairly and customers are protected as long as they report on time.</li></ul>
+   </p>
+   <h2>Data Security</h2>
+   <p>We use strong security to protect your personal data from unauthorized access, loss, or misuse.</p>
+   <h3>Order Cancellation Policy </h3>
+   <p>To keep things fair and clear for both customers and sellers, CRAFTIFY has the following cancellation rules:</p>
+   <h3>1. Cancellation Window for Customers</h3>
+   <p><ul><li> After placing an order with advance payment, the buyer will have 24 hours to cancel the order.</li>
+      <li>During this time, the "Cancel Order" button will be active in their order history.</li></ul>
+   </p>
+   <h3>2. After 24 Hours</h3>
+   <p>
+    <ul><li>After 24 hours, the "Cancel Order" button will be disabled automatically.</li>
+    <li>This is because sellers may have already started preparing or shipping the product.</li>
+    <li>No cancellations will be allowed after this period unless the seller agrees.</li></ul>
+   </p>
+   <h2>Contact Us</h2>
+   <p> For any questions or to exercise your privacy rights, <a href="{% url 'contactus' %}" style="color: #ff2768;">Contact Us</a>at: craftify966@gmail.com </p>
+ </div>
+
+       <footer class="footer">
+  <div class="footer-links">
+    
+    <p style="color: white;">
+      <a href="{% url 'contactus' %}" style="color: white;">Contact Us</a> |
+      <a href="{% url 'privacypolicy' %}" style="color: white;">Privacy Policy</a> |
+      <a href="{% url 'custterms' %}" style="color: white;">Terms and Conditions</a> |
+      <a href="{% url 'exchange' %}" style="color: white;">Exchange Policy</a> |
+      <a href="{% url 'refund' %}" style="color: white;">Refund Policy</a> |
+      <a href="{% url 'helpcenter' %}" style="color: white;">Help Center</a> |
+      <a href="{% url 'aboutuss' %}" style="color: white;">About Us</a>
+    </p>
+    <p style="color: white;">&copy; 2025 CRAFTIFY</p>
+  </div>
+</footer>
+<script>
+  function toggleCategoryModal(event) {
+    event.preventDefault();
+    var modal = document.getElementById("categoryModal");
+    modal.style.display = (modal.style.display === "block") ? "none" : "block";
+  }
+
+  function closeCategoryModal() {
+    document.getElementById("categoryModal").style.display = "none";
+  }
+
+  
+  window.addEventListener("click", function(event) {
+    var modal = document.getElementById("categoryModal");
+    var button = document.querySelector(".category-wrapper");
+    if (!modal.contains(event.target) && !button.contains(event.target)) {
+      modal.style.display = "none";
+    }
+  });
+</script>
+</body>
+</html>

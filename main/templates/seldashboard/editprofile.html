@@ -1,0 +1,244 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+body, html {
+    margin: 0;
+    padding: 0;
+    height: auto;
+    min-height: 100vh;
+    overflow-y: auto;
+}
+
+        .edit-form {
+            background-color: #ffc6c3;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 600px;
+        }
+
+        .edit-form h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #ff2768;
+        }
+
+        .edit-form label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .edit-form input[type="text"],
+        .edit-form input[type="date"],
+        .edit-form input[type="number"],
+        .edit-form input[type="file"],
+        .edit-form textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .edit-form textarea {
+            height: 70px;
+            resize: none;
+        }
+.error {
+    font-size: 13px;
+    color: green;  
+    margin-bottom: 10px;
+    text-align: left;
+}
+        .edit-form button {
+            background-color: #ff2768;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            width: 25%;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+        .edit-form button:hover {
+            background-color: #e01a5e;
+        }
+    </style>
+</head>
+<body>
+
+    <form class="edit-form" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <h2>Edit Profile</h2>
+
+        <label>Full Name</label>
+        <input type="text" name="full_name" value="{{ seller.full_name }}" required>
+
+        <label>Username</label>
+        <input type="text" name="username" value="{{ seller.username }}" required>
+
+        <label>DOB</label>
+        <input type="date" name="dob" value="{{ seller.dob|date:'Y-m-d' }}" required>
+
+        <label>Experience</label>
+        <input type="number" name="experience" value="{{ seller.experience }}" required>
+
+        <label>Skills</label>
+        <input type="text" name="skills" value="{{ seller.skills }}" required>
+
+        <label>City</label>
+        <input type="text" name="city" value="{{ seller.city }}" required>
+
+        <label>Additional Details</label>
+        <textarea name="additional_details">{{ seller.additional_details }}</textarea>
+<label>Profile Image</label>
+<input type="file" name="profile_image" accept="image/*" onchange="previewImage(event)">
+
+<img id="preview" 
+     src="{% if seller.profile_image and seller.profile_image.url %}{{ seller.profile_image.url }}{% else %}{% static 'images/default-avatar.png' %}{% endif %}" 
+     alt="Current Profile" 
+     style="max-width: 100px; margin-top: 10px; display: block; border-radius: 6px;">
+        <button type="submit">Update Profile</button>
+    </form>
+   <script>
+const fullName = document.querySelector('input[name="full_name"]');
+const username = document.querySelector('input[name="username"]');
+const dob = document.querySelector('input[name="dob"]');
+const experience = document.querySelector('input[name="experience"]');
+const skills = document.querySelector('input[name="skills"]');
+const city = document.querySelector('input[name="city"]');
+const saveBtn = document.querySelector('button[type="submit"]');
+
+
+const fullNameError = document.createElement("div");
+fullNameError.className = "error";
+fullName.after(fullNameError);
+
+const usernameError = document.createElement("div");
+usernameError.className = "error";
+username.after(usernameError);
+
+const dobError = document.createElement("div");
+dobError.className = "error";
+dob.after(dobError);
+
+const experienceError = document.createElement("div");
+experienceError.className = "error";
+experience.after(experienceError);
+
+const skillsError = document.createElement("div");
+skillsError.className = "error";
+skills.after(skillsError);
+
+const cityError = document.createElement("div");
+cityError.className = "error";
+city.after(cityError);
+
+function validateForm() {
+    let valid = true;
+    const letterOnlyRegex = /^[A-Za-z\s]+$/;
+    const numberOnlyRegex = /^[0-9]+$/;
+
+    
+    [fullName, username, skills, city].forEach(input => {
+        if (input.value.startsWith(" ")) input.value = input.value.trimStart();
+    });
+
+   
+    if (!letterOnlyRegex.test(fullName.value.trim()) || fullName.value.trim() === "") {
+        fullNameError.textContent = "Only alphabets allowed.";
+        valid = false;
+    } else fullNameError.textContent = "";
+
+    
+    if (username.value.trim() === "") {
+        usernameError.textContent = "Username is required.";
+        valid = false;
+    } else usernameError.textContent = "";
+
+    
+    if (!letterOnlyRegex.test(skills.value.trim()) || skills.value.trim() === "") {
+        skillsError.textContent = "Only alphabets allowed.";
+        valid = false;
+    } else skillsError.textContent = "";
+
+   
+    if (city.value.trim() === "") {
+        cityError.textContent = "City is required.";
+        valid = false;
+    } else cityError.textContent = "";
+
+    
+    if (!numberOnlyRegex.test(experience.value.trim()) || parseInt(experience.value) < 0) {
+        experienceError.textContent = "Only positive numbers allowed.";
+        valid = false;
+    } else experienceError.textContent = "";
+
+    
+    if (dob.value) {
+        const parts = dob.value.split("-");
+        const year = parseInt(parts[0]);
+        const month = parseInt(parts[1]);
+        const day = parseInt(parts[2]);
+
+        if (
+            parts.length !== 3 ||
+            parts[0].length !== 4 || 
+            year < 1000 || year > 9999 ||
+            month < 1 || month > 12 ||
+            day < 1 || day > 31
+        ) {
+            dobError.textContent = "Invalid Date! Use mm-dd-yyyy";
+            valid = false;
+        } else {
+            dobError.textContent = "";
+        }
+    } else {
+        dobError.textContent = "Date of Birth is required.";
+        valid = false;
+    }
+
+    saveBtn.disabled = !valid;
+    saveBtn.style.cursor = valid ? "pointer" : "not-allowed";
+}
+
+
+dob.addEventListener("input", () => {
+    const parts = dob.value.split("-");
+    if (parts[0] && parts[0].length > 4) {
+        parts[0] = parts[0].slice(0, 4);
+        dob.value = parts.join("-");
+    }
+});
+
+[fullName, username, skills, city, experience, dob].forEach(input => {
+    input.addEventListener("input", validateForm);
+    input.addEventListener("change", validateForm);
+});
+
+
+window.onload = validateForm;
+</script>
+
+
+</body>
+</html>
+

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Reviews & Ratings</title>
+  <style>
+   
+    h3 { color: #ff2768; font-size: 24px; margin-bottom: 20px; }
+    .review-box { background: #ffe6e6; padding: 15px; border-radius: 8px; margin-bottom: 15px; text-align: left; }
+    .review-header { display: flex; justify-content: space-between; font-size: 16px; font-weight: bold; }
+    .stars { color: black; }
+    .review-text { margin: 10px 0; }
+    .reply-box {
+  margin-top: 20px;
+  background-color: #ffe3e0;
+  border: 1px solid #ff2768;
+  border-radius: 8px;
+  padding: 12px 15px;
+  max-width: 400px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.reply-box form {
+  display: flex;
+  gap: 10px;
+}
+
+.reply-box input[type="text"] {
+  flex: 1;
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1.5px solid #ff2768;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.reply-box input[type="text"]:focus {
+  outline: none;
+  border-color: #e0235b;
+  background-color: #fff;
+}
+
+.reply-box button {
+  padding: 8px 18px;
+  background-color: #ff2768;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.25s ease;
+}
+
+.reply-box button:hover {
+  background-color: #e0235b;
+}
+
+
+  </style>
+</head>
+<body>
+  <div class="reviews-container">
+    <h3>⭐ Reviews & Ratings ⭐</h3>
+
+    {% if reviews %}
+      {% for review in reviews %}
+        <div class="review-box" data-review-id="{{ review.id }}">
+          <div class="review-header">
+            <span>{{ review.customer.name }}</span>
+           <span class="stars">
+  {% for i in "12345" %}
+    {% if forloop.counter <= review.rating %}
+      &#9733;
+    {% else %}
+     <span style="color: lightgray;">&#9733;</span>
+    {% endif %}
+  {% endfor %}
+</span>
+
+          </div>
+          <p class="review-text">"{{ review.review_text }}"</p>
+
+          {% if review.image %}
+            <img src="{{ review.image.url }}" alt="Review Image" width="120" style="margin-top: 10px; border-radius: 5px;" />
+          {% endif %}
+
+          {% if review.seller_reply %}
+  <div style="background: #f0f0f0; padding: 10px; margin-top: 10px; border-left: 4px solid #888;">
+    <strong>Seller's Reply:</strong>
+    <p>{{ review.seller_reply }}</p>
+    <small>Replied on: {{ review.reply_date|date:"M d, Y" }}</small>
+  </div>
+{% else %}
+  <div class="reply-box" style="display: block;">
+    <input type="text" placeholder="Type your reply..." />
+    <button onclick="sendReply(this, '{{ review.id }}')">Send</button>
+  </div>
+{% endif %}
+
+            
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>No reviews yet.</p>
+    {% endif %}
+  </div>
+
+  <script>
+    function toggleReplyBox(element) {
+      const replyBox = element.nextElementSibling;
+      replyBox.style.display = replyBox.style.display === "block" ? "none" : "block";
+    }
+
+    function getCSRFToken() {
+      let cookies = document.cookie.split(';');
+      for (let cookie of cookies) {
+        cookie = cookie.trim();
+        if (cookie.startsWith('csrftoken=')) {
+          return cookie.substring('csrftoken='.length);
+        }
+      }
+      return '';
+    }
+
+    function sendReply(button, reviewId) {
+      const inputField = button.previousElementSibling;
+      const replyText = inputField.value.trim();
+
+      if (!replyText) {
+        alert("Please type a reply.");
+        return;
+      }
+
+      fetch('/api/send-reply/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCSRFToken(),
+        },
+        body: JSON.stringify({ review_id: reviewId, reply_text: replyText })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          alert('Reply saved!');
+          inputField.value = '';
+          button.parentElement.style.display = 'none';
+          
+          location.reload();  
+        } else {
+          alert('Error: ' + data.error);
+        }
+      })
+      .catch(() => alert('Error sending reply'));
+    }
+  </script>
+</body>
+</html>

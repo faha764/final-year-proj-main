@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Add New Product</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #ffc6c3;
+    }
+
+    .form-container {
+      max-width: 700px;
+      margin: 30px auto;
+      background-color:white;
+      border-color: #ff2768;
+      padding: 30px 40px;
+      border-radius: 10px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    h3 {
+      text-align: center;
+      color: #ff2768;
+      font-size: 28px;
+      margin-bottom: 30px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    input, select, textarea {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+      width: 100%;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .inline-group {
+      display: flex;
+      gap: 20px;
+    }
+
+    .inline-group .form-group {
+      flex: 1;
+    }
+
+    .file-upload-container {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .file-upload-button {
+      background-color: #ff2768;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    #previewImage {
+      max-width: 80px;
+      max-height: 80px;
+      display: none;
+      border-radius: 6px;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+    }
+
+    .buttons button {
+      flex: 1;
+      padding: 12px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.3s ease;
+      margin-right: 10px;
+    }
+
+    .buttons button:last-child {
+      margin-right: 0;
+    }
+
+    .submit-btn {
+      background-color: #ff2768;
+      color: white;
+    }
+    #previewImage {
+  max-width: 80px;
+  max-height: 80px;
+  display: none;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+
+    .reset-btn {
+      background-color: white;
+      color: #ff2768;
+      border: 2px solid #ff2768;
+    }
+
+    #customOptions {
+      display: none;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 600px) {
+      .inline-group {
+        flex-direction: column;
+      }
+
+      .buttons {
+        flex-direction: column;
+      }
+
+      .buttons button {
+        margin: 5px 0;
+      }
+    }.error {
+  font-size: 13px;
+  color: green;
+  margin-top: 5px;
+  display: block;
+}
+
+
+  </style>
+</head>
+<body>
+  
+
+<div class="form-container">
+  <h3>Add New Product</h3>
+  <form id="addProductForm" method="POST" action="{% url 'addproduct' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+
+   
+    <div class="form-group">
+      {{ form.name.label_tag }}
+      {{ form.name }}
+    </div>
+
+    
+    <div class="form-group">
+    <label for="id_price">Price:</label>
+    <input type="number" name="price" id="id_price" step="1" required>
+    <div class="error" id="price-error"></div>
+</div>
+
+<div class="form-group">
+    <label for="id_quantity">Quantity:</label>
+    <input type="number" name="quantity" id="id_quantity" step="1" required>
+    <div class="error" id="quantity-error"></div>
+</div>
+
+   
+    <div class="form-group">
+      {{ form.description.label_tag }}
+      {{ form.description }}
+    </div>
+
+   
+    <div class="form-group">
+      {{ form.category.label_tag }}
+      {{ form.category }}
+    </div>
+
+   
+    <div class="form-group">
+      <label for="id_customized">Customized:</label>
+      <select name="customized" id="id_customized">
+        <option value="True">Yes</option>
+        <option value="False">No</option>
+      </select>
+    </div>
+
+   
+    <div class="form-group">
+      <label for="imageUpload">Product Image:</label>
+      <div class="file-upload-container">
+        <input type="file" name="image" id="imageUpload" accept="image/*" onchange="previewUploadedImage()" />
+        <img id="previewImage" style="display:none;" />
+      </div>
+    </div>
+
+    <div class="buttons">
+      <button type="submit" class="submit-btn">Add Product</button>
+      <button type="reset" class="reset-btn" onclick="resetForm()">Reset</button>
+    </div>
+
+   
+    
+  </form>
+</div>
+
+<script>
+
+  function toggleCustomOptions(value) {
+    const customOptions = document.getElementById("customOptions");
+    customOptions.style.display = value === "yes" ? "block" : "none";
+  }
+
+
+  function previewUploadedImage() {
+    const file = document.getElementById("imageUpload").files[0];
+    const preview = document.getElementById("previewImage");
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        preview.src = e.target.result;
+        preview.style.display = "block";
+      };
+      reader.readAsDataURL(file);
+    } else {
+      preview.style.display = "none";
+    }
+  }
+
+  
+  function resetForm() {
+    document.getElementById("previewImage").style.display = "none";
+    const customOptions = document.getElementById("customOptions");
+    if (customOptions) customOptions.style.display = "none";
+    document.getElementById("imageUpload").value = ""; 
+  }
+
+  
+  document.getElementById("addProductForm").addEventListener("submit", function(event) {
+    const imageInput = document.getElementById("imageUpload");
+    if (!imageInput.files || imageInput.files.length === 0) {
+      event.preventDefault(); 
+      alert("Please upload a product image before adding the product.");
+    }
+  });
+</script>
+
+<script>
+const price = document.getElementById('id_price');
+const quantity = document.getElementById('id_quantity');
+const submitBtn = document.querySelector('.submit-btn');
+
+const priceError = document.getElementById('price-error');
+const quantityError = document.getElementById('quantity-error');
+
+
+let touched = { price: false, quantity: false };
+
+function validateProductForm() {
+    let valid = true;
+
+    
+    if (touched.price) {
+        if (price.value.trim() === "" || parseFloat(price.value) < 0) {
+            priceError.textContent = "Price cannot be negative or empty.";
+            valid = false;
+        } else {
+            priceError.textContent = "";
+        }
+    }
+
+   
+    if (touched.quantity) {
+        if (quantity.value.trim() === "" || parseInt(quantity.value) < 0) {
+            quantityError.textContent = "Quantity cannot be negative or empty.";
+            valid = false;
+        } else {
+            quantityError.textContent = "";
+        }
+    }
+
+    submitBtn.disabled = !valid;
+    submitBtn.style.cursor = valid ? "pointer" : "not-allowed";
+}
+
+
+price.addEventListener("input", () => {
+    touched.price = true;
+    validateProductForm();
+});
+quantity.addEventListener("input", () => {
+    touched.quantity = true;
+    validateProductForm();
+});
+
+
+document.querySelectorAll("input[type='text'], textarea").forEach(input => {
+    input.addEventListener("input", function() {
+        if (this.value.startsWith(" ")) {
+            this.value = this.value.trimStart();
+        }
+    });
+});
+
+
+submitBtn.disabled = true;
+submitBtn.style.cursor = "not-allowed";
+</script>
+
+
+
+</body>
+</html>

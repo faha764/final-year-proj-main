@@ -1,0 +1,618 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Seller Signup</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+  * { 
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+       body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f8c8c4;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+    
+    
+   
+
+    .container {
+      display: flex;
+    margin: 20px auto;
+      width: 800px;
+      background: white;
+      border-radius: 10px;
+      align-items: center;
+      overflow: hidden;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .image-section {
+      width: 50%;
+    }
+
+    .image-section img {
+      width: 100%;
+      height: 1000px;
+      object-fit: cover;
+    }
+
+    .Signup-section {
+      width: 50%;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .head-container {
+      margin-bottom: 20px;
+    }
+
+    .head-container h1 {
+      font-size: 28px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .form-container {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+h1{font-size: 20px;
+color: #ff2768;}
+    .form-container label {
+      width: 100%;
+      font-weight: bold;
+      text-align: left;
+      margin-bottom: 5px;
+    }
+.main-wrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
+}
+
+    .form-container input {
+      width: 80%;
+      padding: 12px;
+      margin-bottom: 5px;
+      border: 2px solid #ff2768;
+      border-radius: 5px;
+      box-shadow: 5px 5px #ffc6c3;
+      font-size: 16px;
+    }
+
+    .error {
+      width: 80%;
+      font-size: 13px;
+      color: red;
+      margin-bottom: 10px;
+      text-align: left;
+    }
+
+    .password-container {
+      width: 80%;
+      position: relative;
+    }
+
+    .password-container input {
+      width: 100%;
+      padding-right: 40px;
+    }
+
+    .eye-icon {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .modal {
+  display: none; 
+  position: fixed;
+  z-index: 100;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: 10% auto;
+  padding: 20px;
+  border: 2px solid #000;
+  width: 400px;
+  border-radius: 10px;
+  box-shadow: 5px 5px black;
+}
+
+.modal-content input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 2px solid black;
+  box-shadow: 5px 5px black;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover {
+  color: red;
+}
+
+.center-button {
+  display: block;
+  margin: 15px auto 0 auto;
+  padding: 10px 25px;
+  background-color: #f28b82;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 3px 3px black;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+    .signup-btn {
+      width: 80%;
+      height: 50px;
+      font-size: 16px;
+      background-color: #ff2768;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: not-allowed;
+      box-shadow: 5px 5px black;
+      margin-top: 10px;
+    }
+
+    .signup-btn.enabled {
+      background-color:  #ff2768;
+      cursor: pointer;
+    }
+    #account-info {
+  display: none;
+  font-weight: bold;
+  color: green;
+  font-size: 14px;
+  margin: 5px 0 10px 0;
+  padding: 8px;
+  border: 2px solid green;
+  border-radius: 6px;
+  background-color: #eaffea;
+  width: 80%;
+    }
+    .verification-container {
+    display: flex;
+    align-items:left;
+    gap: 10px; 
+    margin-top:9px;
+}
+.verification-container input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+}
+
+.terms-container {
+    display: flex;
+    align-items:left;
+    gap: 8px; 
+    margin-top: 10px;
+    justify-content: flex-start; 
+}
+
+.terms-container input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    box-shadow: none !important;
+}
+
+.terms-container label {
+  font-weight: normal;
+    font-size: 14px;
+}
+
+.terms-error {
+  width: 80%;
+  font-size: 13px;
+  color: red;
+  margin-bottom: 10px;
+  text-align: left;
+}.account-wrapper {
+  width: 80%;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.account-wrapper select {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 5px;
+  border: 2px solid #ff2768;
+  border-radius: 5px;
+  box-shadow: 5px 5px #ffc6c3;
+  font-size: 16px;
+}
+
+   
+   
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="image-section">
+      <img src="https://images.pexels.com/photos/8801188/pexels-photo-8801188.jpeg?auto=compress&cs=tinysrgb&w=600" />
+    </div>
+
+    <div class="Signup-section">
+      <div class="head-container">
+        <h1>Seller Signup</h1>
+      </div>
+{% if error %}
+<div style="color:red; font-weight:bold; margin-bottom:10px; text-align:center;">
+    {{ error }}
+</div>
+{% endif %}
+
+      
+      <form method="POST" action="{% url 'sellersignup' %}" class="form-container">
+        {% csrf_token %}
+
+        <label>Name</label>
+        <input type="text" id="name" name="name" placeholder="Enter Name" maxlength="25" maxrequired />
+        <div class="error" id="nameError"></div>
+
+        <label>Email</label>
+        <input type="email" id="email" name="email" placeholder="Enter Gmail" maxlength="35" required />
+        <span id="email-error" style="color:red;"></span>
+        <div class="error" id="emailError"></div>
+
+        <label>Contact No</label>
+        <input type="text" id="contact" name="contact" placeholder="03XXXXXXXXX" maxlength="11" required />
+        <div class="error" id="contactError"></div>
+
+        <label>Shop Name</label>
+        <input type="text" id="shopname" name="shop_name" maxlength="20" placeholder="Enter Shop Name" required />
+        <div class="error" id="shopNameError"></div>
+
+        <label for="cnic">ID Card</label>
+        <input type="text" id="cnic" name="cnic" placeholder="xxxxx-xxxxxxx-x" maxlength="15" required />
+        <span id="cnic-error" style="color:red;"></span>
+        <div class="error" id="cnicError"></div>
+
+        <label for="account-title">Account Type</label>
+        <div class="account-wrapper">
+          <select id="account-title" name="account_type" onchange="handleAccountSelection()" required>
+            <option value="">-- Select --</option>
+            <option value="easypaisa">Easypaisa</option>
+            <option value="jazzcash">JazzCash</option>
+          </select>
+          <p id="account-info"></p>
+        </div>
+
+       
+        <div id="accountModal" class="modal">
+          <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h1>Account Details</h1>
+            <label><strong>Account Number</strong></label>
+            <input type="text" id="modal-account-number" name="account_number" maxlength="11"placeholder="Enter Account Number">
+            <div class="error" id="modalNumberError"></div>
+
+            <label><strong>Account Holder Name</strong></label>
+            <input type="text" id="modal-account-holder" name="account_holder_name"maxlength="30" placeholder="Enter Holder Name">
+            <div class="error" id="modalHolderError"></div>
+
+            <button class="center-button" onclick="saveAccountDetails(event)">Save</button>
+          </div>
+        </div>
+
+        <label>Password</label>
+<div class="password-container">
+  <input type="password" id="password" name="password" maxlength="15" placeholder="Enter Password" required />
+
+    <i id="toggleEye" class="eye-icon fas fa-eye" onclick="togglePassword('password','toggleEye')"></i>
+</div>
+<div class="error" id="passwordLengthError"></div> 
+
+
+        <label>Confirm Password</label>
+        <div class="password-container">
+        <input type="password" id="confirm" placeholder="Enter Confirm Password" maxlength="15"required />
+         <i id="toggleEyeConfirm" class="eye-icon fas fa-eye" onclick="togglePassword('confirm','toggleEyeConfirm')"></i></div>
+        <div class="error" id="passwordError"></div>
+
+     
+        <div class="terms-container">
+          <input type="checkbox" id="terms" required>
+          <label for="terms">I've read and understood Craftify's
+            <a href="{% url 'termsandconditions' %}" style="color: #ff2768; font-weight: bold;">Terms & Conditions</a>
+          </label>
+        </div>
+        <div class="terms-error" id="termsError"></div>
+
+          <button id="signup-btn" class="signup-btn" disabled onclick="redirectToCreateProfile()">SIGN UP</button>
+        </div>
+      </div>
+    </div>
+
+  
+
+  <script>
+    function togglePassword(fieldId, toggleId) {
+    const field = document.getElementById(fieldId);
+    const toggle = document.getElementById(toggleId);
+
+    if (field.type === "password") {
+      field.type = "text";
+      toggle.classList.remove("fa-eye");
+      toggle.classList.add("fa-eye-slash");
+    } else {
+      field.type = "password";
+      toggle.classList.remove("fa-eye-slash");
+      toggle.classList.add("fa-eye");
+    }
+  }
+    
+
+    const name = document.getElementById("name");
+    const email = document.getElementById("email");
+    const contact = document.getElementById("contact");
+    const shopname = document.getElementById("shopname");
+    const password = document.getElementById("password");
+    const confirm = document.getElementById("confirm");
+    const cnic = document.getElementById("cnic");
+    const terms = document.getElementById("terms");
+
+    const signupBtn = document.getElementById("signup-btn");
+
+    const nameError = document.getElementById("nameError");
+    const emailError = document.getElementById("emailError");
+    const contactError = document.getElementById("contactError");
+    const shopNameError = document.getElementById("shopNameError");
+    const cnicError = document.getElementById("cnicError");
+    const passwordError = document.getElementById("passwordError");
+    
+const termsError = document.getElementById("termsError");
+document.querySelectorAll("input, select").forEach(el => {
+  el.addEventListener("input", () => {
+    if (el.value.startsWith(" ")) {
+      el.value = el.value.trimStart();
+    }
+  });
+});
+
+
+if (!terms.checked) {
+  termsError.textContent = "You must agree to the terms.";
+  valid = false;
+} else {
+  termsError.textContent = "";
+}
+
+    function validateForm() {
+  let valid = true;
+
+  if (!/^[A-Za-z\s]+$/.test(name.value.trim())) {
+    nameError.textContent = "Only alphabets allowed in name.";
+    valid = false;
+  } else nameError.textContent = "";
+
+  if (!/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i.test(email.value.trim())) {
+   
+    emailError.textContent = "Invalid email format xxxxx@gmail.com";
+    valid = false;
+  } else emailError.textContent = "";
+
+  if (!/^03[0-9]{9}$/.test(contact.value.trim())) {
+    contactError.textContent = "Invalid Pakistani contact number.";
+    valid = false;
+  } else contactError.textContent = "";
+
+  if (shopname.value.trim().length < 3) {
+    shopNameError.textContent = "Shop name too short.";
+    valid = false;
+  } else shopNameError.textContent = "";
+
+  if (!/^\d{5}-\d{7}-\d{1}$/.test(cnic.value.trim())) {
+    cnicError.textContent = "CNIC format must be xxxxx-xxxxxxx-x.";
+    valid = false;
+  } else cnicError.textContent = "";
+ 
+if (password.value.trim().length < 8) {
+  document.getElementById("passwordLengthError").textContent = "Password must be at least 8 characters.";
+  valid = false;
+} else {
+  document.getElementById("passwordLengthError").textContent = "";
+}
+
+if (password.value.trim() === "" || password.value !== confirm.value.trim()) {
+  passwordError.textContent = "Passwords do not match or empty.";
+  valid = false;
+} else {
+  passwordError.textContent = "";
+}
+
+
+  if (password.value.trim() === "" || password.value !== confirm.value.trim()) {
+    passwordError.textContent = "Passwords do not match or empty.";
+    valid = false;
+  } else passwordError.textContent = "";
+
+  
+  if (!terms.checked) {
+    termsError.textContent = "You must agree to the terms.";
+    valid = false;
+  } else {
+    termsError.textContent = "";
+  }
+
+  signupBtn.disabled = !valid;
+  signupBtn.classList.toggle("enabled", valid);
+}
+
+
+
+
+
+[name, email, contact, shopname, password, confirm, cnic, terms].forEach(el => {
+  el.addEventListener("input", validateForm);
+  el.addEventListener("change", validateForm);
+});
+    name.addEventListener("input", validateForm);
+    email.addEventListener("input", validateForm);
+    contact.addEventListener("input", () => {
+      contact.value = contact.value.replace(/[^0-9]/g, "");
+      validateForm();
+    });
+    shopname.addEventListener("input", validateForm);
+    password.addEventListener("input", validateForm);
+    confirm.addEventListener("input", validateForm);
+    cnic.addEventListener("input", validateForm);
+    terms.addEventListener("change", validateForm);
+
+   let accountDetailsSaved = false;
+
+let previousAccountType = "";
+
+document.getElementById('account-title').addEventListener('change', function () {
+  const selected = this.value;
+
+  
+  if ((selected === 'easypaisa' || selected === 'jazzcash') && selected !== previousAccountType) {
+    accountDetailsSaved = false; 
+    document.getElementById('accountModal').style.display = 'block';
+    previousAccountType = selected;
+  }
+});
+
+  
+
+    function closeModal() {
+      document.getElementById('accountModal').style.display = 'none';
+    }
+
+    function saveAccountDetails(event) {
+  event.preventDefault();
+  const number = document.getElementById("modal-account-number").value.trim();
+  const holder = document.getElementById("modal-account-holder").value.trim();
+  let valid = true;
+
+  
+  if (!/^03[0-9]{9}$/.test(number)) {
+    document.getElementById("modalNumberError").textContent = "Enter valid Pakistani mobile (03XXXXXXXXX).";
+    valid = false;
+  } else {
+    document.getElementById("modalNumberError").textContent = "";
+  }
+
+  
+  if (!/^[A-Za-z\s]{3,}$/.test(holder)) {
+    document.getElementById("modalHolderError").textContent = "Name must be letters only (min 3 chars).";
+    valid = false;
+  } else {
+    document.getElementById("modalHolderError").textContent = "";
+  }
+
+  if (!valid) return;
+
+  
+document.getElementById("account-info").innerHTML = 
+    "Saved:<br>number " + number + "<br>name " + holder;
+
+
+  document.getElementById("account-info").style.display = "block";
+  closeModal();
+  accountDetailsSaved = true;
+  validateForm();
+}
+
+
+    function redirectToCreateProfile() {
+      window.location.href = "{% url 'createprofile' %}";
+    }
+  </script>
+  <script>
+document.getElementById("email").addEventListener("blur", function() {
+  fetch(`/check-unique/?email=${this.value}`)
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("email-error").textContent = data.valid ? "" : data.message;
+    });
+});
+
+document.getElementById("cnic").addEventListener("blur", function() {
+  fetch(`/check-unique/?cnic=${this.value}`)
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("cnic-error").textContent = data.valid ? "" : data.message;
+    });
+});
+</script>
+<script>
+let emailDuplicate = false;
+let cnicDuplicate = false;
+
+document.getElementById("email").addEventListener("blur", function() {
+  fetch(`/check-unique/?email=${this.value}`)
+    .then(res => res.json())
+    .then(data => {
+      if (!data.valid) {
+        document.getElementById("email-error").textContent = data.message;
+        emailDuplicate = true;
+      } else {
+        document.getElementById("email-error").textContent = "";
+        emailDuplicate = false;
+      }
+      validateForm();  
+    });
+});
+
+document.getElementById("cnic").addEventListener("blur", function() {
+  fetch(`/check-unique/?cnic=${this.value}`)
+    .then(res => res.json())
+    .then(data => {
+      if (!data.valid) {
+        document.getElementById("cnic-error").textContent = data.message;
+        cnicDuplicate = true;
+      } else {
+        document.getElementById("cnic-error").textContent = "";
+        cnicDuplicate = false;
+      }
+      validateForm();  
+    });
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,588 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Terms and Conditions</title>
+  <style>
+      * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background-color: #f8c8c4;
+    }
+
+    .page-content {
+      flex: 1;
+    }
+
+    
+    header {
+      background-color: #ffb6b3;
+      display: flex;
+      align-items: center;
+      padding: 15px 50px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .logo img {
+      width: 50px;
+      height: auto;
+      background-color: #f8c8c4;
+      padding: 5px;
+      border-radius: 50%;
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: 20px;
+    }
+
+    .search-bar input {
+      padding: 8px;
+      width: 200px;
+      font-weight: bold;
+      font-size: 14px;
+      border: 2px solid #ff6685;
+      border-radius: 5px;
+    }
+
+    .search-bar button {
+      padding: 8px 12px;
+      font-size: 14px;
+      font-weight: bold;
+      background: #ff2768;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    nav {
+      margin-left: auto;
+    }
+
+    .nav-link, nav a {
+      color: black;
+      text-decoration: none;
+      margin-right: 12px;
+      font-size: 13px;
+    }
+
+    nav a:hover {
+      color: #555;
+      text-decoration: underline;
+    }
+
+    i {
+      margin-right: 5px;
+    }
+.closeBtn {
+  float: left;
+  font-size: 22px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+
+
+.category-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+  .category-modal ul,
+.category-modal ul li {
+  list-style: none;
+}
+
+
+  .category-modal {
+    display: none;
+    position: absolute;
+    top: 100%; 
+    left: 0;
+    width: 280px; 
+    background: #fff7f8;
+    padding: 20px 10px 10px 20px;
+    margin: 2px auto;
+    margin-bottom: 2px;
+    border-spacing: 0;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    border: 2px solid #ff2768;
+    z-index: 9999;
+  }
+
+  .modal-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .modal-content li a {
+    font-size: 15px;
+    font-weight: bold;
+    color: #b0374e;
+    background-color: #ffe5e2;
+    padding: 4px 12px;
+    border-radius: 8px;
+    text-align: center;
+    transition: all 0.3s ease;
+    display: block;
+    
+  }
+
+
+  .modal-content li a:hover {
+    background-color: #ff2768;
+    color: white;
+  }
+
+  .modal-content .close {
+    float: right;
+    font-size: 18px;
+    color: #e6003d;
+    cursor: pointer;
+    margin-bottom: 10px;
+  }
+
+.cart-section {
+  display: flex;
+  align-items: center;
+  gap:5px;
+}
+
+.cart-icon:hover{
+  transform: scale(1.1);
+}
+.cart-box {
+  padding: 20px;
+  border-radius: 10px; 
+  display: inline-block;
+}
+
+.cart-img {
+  width: 40px;   
+  height: 40px;
+}
+
+
+.join-seller-btn {
+  background-color: none;
+ 
+  
+  
+}
+
+   .page-wrapper {
+  display: flex;
+  justify-content: center;   
+  align-items: center;       
+  min-height: 0vh;        
+   padding-bottom: 100px; 
+}
+
+    .container {
+  max-width: 900px;
+  margin: 40px auto;
+  background: linear-gradient(135deg, #fff4f5, #ffecec);
+  padding: 40px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  border-radius: 16px;
+  margin-bottom: 30px;
+  
+}
+
+h1 {
+  text-align: center;
+  color: #d62f53;
+  margin-bottom: 25px;
+  font-size: 32px;
+  letter-spacing: 1px;
+}
+
+h2 {
+  color: #b4203a;
+  font-size: 22px;
+  margin-top: 30px;
+  margin-bottom: 12px;
+  border-left: 4px solid #ff2768;
+  padding-left: 12px;
+}
+
+p {
+  font-size: 16px;
+  line-height: 1.8;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+ul {
+  margin-left: 25px;
+  padding-left: 5px;
+}
+ol {
+  margin-left: 25px;
+  padding-left: 5px;
+}
+
+li {
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: #444;
+  line-height: 1.6;
+  list-style-type: disc;
+}
+
+.contact {
+  background: #ffe6eb;
+  padding: 20px;
+  border-left: 5px solid #ff2768;
+  border-radius: 10px;
+  margin-top: 25px;
+  font-size: 16px;
+}
+
+   footer {
+      background: #ff2768;
+      padding: 6px;
+      text-align: center;
+      font-size: 20px;
+      color: white;
+      width: 100%;
+      margin-top: auto;
+    }
+
+    .footer-links {
+      margin-bottom: 10px;
+      color: white;
+    }
+
+    .footer a {
+      color: rgba(10, 9, 9, 0.829);
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: 500;
+      font-size: 20px;
+      color: white;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+      color: white;
+    }
+    @keyframes fadeInSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+  </style>
+</head>
+<body>
+  <header>
+        
+               <div class="logo">
+                        <img src="{% static 'images/logo.jpeg' %}" alt="Logo">
+        </div>
+
+        
+        
+        <form action="{% url 'search_products' %}" method="GET" class="search-bar">
+    <input type="text" name="q" placeholder="Search..." required>
+    <button type="submit"><i class="fas fa-search"></i></button>
+</form>
+        <nav>
+            <ul>
+              <nav class="header-nav">
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+            
+            <a href="{% url 'homeee' %}" data-url="{% url 'homeee' %}" onclick="loadPage(event, this.dataset.url)">
+              <i class="fas fa-home"></i> Home</a>
+             <div class="category-wrapper">
+                <a href="#" class="nav-link" onclick="toggleCategoryModal(event)">
+                  <i class="fas fa-bars"></i>Category
+                </a>
+                <div id="categoryModal" class="category-modal">
+
+<div class="modal-content">
+  <span class="close" onclick="closeCategoryModal()"><i class="fas fa-times"></i></span>
+  <ul>
+    {% for category in categories %}
+      <li>
+        <a href="{% url 'category_products' category.id %}">
+          <i class="{{ category.icon_class }}"></i> {{ category.name }}
+        </a>
+      </li>
+    {% empty %}
+      <li>No categories available</li>
+    {% endfor %}
+  </ul>
+</div>
+                   </div>
+                  </div>
+                </div>
+                
+                <a href="{% url 'custsignup' %}" data-url="{% url 'custsignup' %}" onclick="loadPage(event, this.dataset.url)">
+                  <i class="fas fa-info-circle"></i>Sign Up</a>
+                  <a href="{% url 'custlogin' %}" data-url="{% url 'custlogin' %}" onclick="loadPage(event, this.dataset.url)">
+                <i class="fas fa-user-circle"></i>  Login</a>
+              
+                <a href="{% url 'cart_vie' %}" data-url="{% url 'cart_vie' %}" onclick="loadPage(event, this.dataset.url)">
+                  <i class="fas fa-shopping-cart"></i> Cart</a>
+              
+                <a href="{% url 'wishlistok' %}" data-url="{% url 'wishlistok' %}" onclick="loadPage(event, this.dataset.url)">
+                  <i class="fas fa-heart"></i> Wishlist</a>
+              
+               
+              
+           {% if request.session.seller_id %}
+  
+  <a href="{% url 'seller_redirect' %}">
+    <i class="fas fa-user"></i> Sell
+  </a>
+  <a href="{% url 'sellerlogout' %}">
+    <i class="fas fa-sign-out-alt"></i> Logout
+  </a>
+{% else %}
+
+  <a href="{% url 'sellersignup' %}">
+    <i class="fas fa-user-plus"></i> Join as Seller
+  </a>
+  <a href="{% url 'sellerlogin' %}">
+    <i class="fas fa-sign-in-alt"></i> Login
+  </a>
+{% endif %}
+                               </nav>
+               </ul>
+
+       
+       
+    </header>
+  <div class="container">
+  <h1>Terms and Conditions</h1>
+
+  <h2> How to Get Help with an Order </h2>
+  <p>If you're facing an issue with your order, Craftify makes it easy to get help. Here's how:</p>
+
+  <h2> Contact the Seller</h2>
+  <p>The seller is the first and best person to assist you with your order. You can contact the seller directly through the “Product Details” page in the app.</p>
+
+  <p>Sellers can help you with:</p>
+  <ul>
+   
+    
+    <li> Requesting returns or exchanges.</li>
+    <li> Any product-related questions.</li>
+  </ul>
+
+  <h2> Wait for the Seller to Respond</h2>
+  <p>Please allow at least 48 hours for the seller to respond. Most sellers reply within 1-2 days.</p>
+
+  <h2> If the Seller Doesn't Help</h2>
+  <p>If your issue isn't resolved after 48 hours, you can:</p>
+  <ul>
+    <li>Go to the Contact Us page in the Craftify app.</li>
+    
+    <li>Fill in the form (include order ID and reason).</li>
+  </ul>
+  <p>Our support team will review your complaint and respond accordingly.</p>
+
+  <h2>What Happens Next?</h2>
+  <p>For qualifying complaints (like non-delivery, damaged products, or wrong items), the Craftify team may issue a full refund after reviewing your case.</p>
+  <p> <strong>Note:</strong> Refund decisions are based on evidence, seller history, and platform policies.</p>
+
+  <h2> Order Status </h2>
+
+  <h3> Status Options:</h3>
+  <p>Each order will display a status, such as:</p>
+  <ul>
+    <li style="list-style: none;
+  padding: 0;
+  margin: 0;"><strong>Pending:</strong> Order placed, waiting for admin confirmation.</li>
+    <li style="list-style: none;
+  padding: 0;
+  margin: 0;"><strong>Shipped:</strong> Seller has shipped the product.</li>
+    <li style="list-style: none;
+  padding: 0;
+  margin: 0;"><strong>Delivered:</strong> Product delivered to the customer.</li>
+  </ul>
+
+  <h3> Time Tracking:</h3>
+  <ul>
+    <li>15 days countdown begins from the day the order is confirmed.</li>
+    <li>During this period, the customer can monitor the order status.</li>
+  </ul>
+
+  <h2> What If the Order Is NOT Delivered Within 15 Days?</h2>
+  <p>If 15 days pass after confirming the order and the status is still not “Delivered”:</p>
+  <ul>
+    <li>The customer should first contact the seller using the message option.</li>
+    <li>If the seller does not respond within 2 additional days.</li>
+    <li>The customer can then contact the Admin team for support or a refund.</li>
+  </ul>
+  <h2>How to Contact a Seller</h2>
+
+  <h3> Before Placing an Order</h3>
+  <p>If a customer has a question about a product before purchasing:</p>
+  <ul>
+    <li>Login or create an account.</li>
+    <li>Go to the Product Detail Page.</li>
+    <li>Click the “Chat Now” button.</li>
+    <li>Type your question and click Send.</li>
+  </ul>
+  <p> The seller will respond  you as soon as possible.</p>
+
+  
+
+  <h2> How Do I Change My Shipping Address?</h2>
+  <p>For customers on the Craftify platform:</p>
+
+  <h3> Quick Answer:</h3>
+  <p>You can only change your shipping address before the seller ships your order.</p>
+  <p> To contact the seller, go to the Product Detail Page (not the Order Page).</p>
+
+  <h3> If the Order Is Not Yet Shipped:</h3>
+  <ul>
+    <li>Visit the Product Detail Page.</li>
+    <li>Click “Chat Now”.</li>
+    <li>Send your correct shipping address.</li>
+    <li>If the order status is still "Confirmed", the seller can update your address.</li>
+  </ul>
+
+  <h3> If the Order Has Already Been Shipped:</h3>
+  <ul>
+    <li>The address cannot be changed after shipment.</li>
+    
+  </ul>
+
+  <h2> How to Purchase an Item on Craftify</h2>
+  <p>When you shop on Craftify, you're supporting local craftswomen and their handmade or customizable items. Here's how to place an order:</p>
+
+  <h3>
+     Step-by-Step: Placing an Order</h3>
+
+  <h4>1. Browse Products</h4>
+  <ul>
+    <li>Search or explore items from different sellers.</li>
+    <li>Click any item to visit the Product Detail Page.</li>
+  </ul>
+  <h4>2.  Ask Questions (Optional)</h4>
+  <ul>
+<li>Want to ask something before buying?</li> 
+<li>Use the "Chat Now" button on the product detail page to chat directly with the seller.</li> </ul>
+<h4>3.  Add to Cart</h4>
+<ul>
+<li>Click "Add to Cart" on the product detail page.</li>  
+<li>Add more items if needed.</li></ul>
+<h4>4. Cart</h4>
+<ul>
+<li>Go to your Cart.</li>  
+<li>Click "Proceed to Checkout".</li></ul>
+<h4>5.  Enter Details</h4>
+<ul>
+<li>Fill in your shipping address.</li>
+<li>Click "Proceed to Payment".</li></ul>
+<h4>6.  Place Order</h4>
+<ul>
+<li>Review everything, select payment method, make payment and upload screenshot.</li>
+<li>Click "Place Order".</li>
+</ul>
+<h4>7.  Order Confirmation</h4>
+<ul>
+<li>You'll get a confirmation notification.</li>  
+<li>You can track your order from “My Orders” in dashboard.</li> 
+</ul>
+
+<h2>When can a customer request a refund?</h2>
+<p>A customer can request a refund in the following cases:</p>
+<ul>
+<li> The item did not arrive even after 15 days from the order date.</li> 
+<li>The admin or customer cancelled the order but the payment was already made.</li>
+</ul>
+<p><strong>Note:</strong> Refunds are processed only after approval from the seller or admin team.</p>
+<h2>When can a customer request a return or exchange?</h2>
+<p>A customer can request a return or exchange if:</p>
+<ul>
+<li> The size, color, or design delivered was wrong compared to what was ordered.</li>
+<li> The product is damaged or not functional.</li>
+<li> The product is not customized as promised.</li>
+</ul>
+<h2>Conditions for Return & Exchange:</h2>
+<ul>
+<li> Request must be made within 3 days of product delivery.</li>
+<li>Product should be unused, undamaged, and in original packaging.</li>
+<li>Customer must upload photo proof (if damaged or wrong product received).</li>
+<li>Custom or personalized items are not returnable, unless:</li>
+    <ol><li>Item is broken/damaged.</li>
+    <li>Wrong item was sent.</li></ol>
+<li> Have more questions? Visit our <a href="{% url 'contactus' %}" style="color: #ff2768;">Contact Us</a>  for support. We're happy to help!</li>
+</ul>
+
+</div>
+
+     <footer class="footer">
+  <div class="footer-links">
+    
+    <p style="color: white;">
+      <a href="{% url 'contactus' %}" style="color: white;">Contact Us</a> |
+      <a href="{% url 'privacypolicy' %}" style="color: white;">Privacy Policy</a> |
+      <a href="{% url 'custterms' %}" style="color: white;">Terms and Conditions</a> |
+      <a href="{% url 'exchange' %}" style="color: white;">Exchange Policy</a> |
+      <a href="{% url 'refund' %}" style="color: white;">Refund Policy</a> |
+      <a href="{% url 'helpcenter' %}" style="color: white;">Help Center</a> |
+      <a href="{% url 'aboutuss' %}" style="color: white;">About Us</a>
+    </p>
+    <p style="color: white;">&copy; 2025 CRAFTIFY</p>
+  </div>
+</footer>
+<script>
+  function toggleCategoryModal(event) {
+    event.preventDefault();
+    var modal = document.getElementById("categoryModal");
+    modal.style.display = (modal.style.display === "block") ? "none" : "block";
+  }
+
+  function closeCategoryModal() {
+    document.getElementById("categoryModal").style.display = "none";
+  }
+
+  
+  window.addEventListener("click", function(event) {
+    var modal = document.getElementById("categoryModal");
+    var button = document.querySelector(".category-wrapper");
+    if (!modal.contains(event.target) && !button.contains(event.target)) {
+      modal.style.display = "none";
+    }
+  });
+</script>
+</body>
+</html>

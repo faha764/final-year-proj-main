@@ -1,0 +1,506 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Exchange Policy | Women Craft Marketplace</title>
+  <style>
+    * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f8c8c4;
+            overflow-y: auto; 
+        }
+        html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; 
+  overflow-y: auto;    
+}
+
+
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; 
+  
+}
+
+    
+    
+    
+.header-container {
+  background-color: #ffb6b3; 
+  display: flex;
+  
+  align-items: center;
+  padding: 15px 50px; 
+   
+}
+
+ header {
+    background: #ffb6b3;
+    display: flex;
+    align-items: center;
+    padding: 15px 50px; 
+}
+
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.logo img {
+    width: 50px;
+    height: auto;
+    background-color: #f8c8c4;
+    padding: 5px;
+    border-radius: 50%;
+}
+
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 20px;
+}
+.search-bar input {
+    padding: 8px;
+    width: 200px;
+    font-weight: bold;
+    font-size: 14px;
+    border: 2px solid #ff6685;
+    border-radius: 5px;
+}
+.search-bar button {
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: bold;
+    background: #ff2768;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+
+nav {
+    margin-left: auto; 
+}
+.nav-link, a {
+    color: black;
+    text-decoration: none;
+    margin-right: 12px;
+    font-size: 13px;
+    font-weight: none;
+}
+.nav-link:hover,
+a:hover {
+    color: #555;
+    text-decoration: underline;
+}
+i {
+    margin-right: 5px;
+}
+
+.closeBtn {
+  float: left;
+  font-size: 22px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+
+
+.category-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+.category-modal ul,
+.category-modal ul li {
+  list-style: none;
+}
+  .category-modal {
+    display: none;
+    position: absolute;
+    top: 100%; 
+    left: 0;
+    width: 280px; 
+    background: #fff7f8;
+    padding: 20px 10px 10px 20px;
+    margin: 2px auto;
+    margin-bottom: 2px;
+    border-spacing: 0;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    border: 2px solid #ff2768;
+    z-index: 9999;
+  }
+
+  .modal-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .modal-content li a {
+    font-size: 15px;
+    font-weight: bold;
+    color: #b0374e;
+    background-color: #ffe5e2;
+    padding: 4px 12px;
+    border-radius: 8px;
+    text-align: center;
+    transition: all 0.3s ease;
+    display: block;
+    
+  }
+
+
+  .modal-content li a:hover {
+    background-color: #ff2768;
+    color: white;
+  }
+
+  .modal-content .close {
+    float: right;
+    font-size: 18px;
+    color: #e6003d;
+    cursor: pointer;
+    margin-bottom: 10px;
+  }
+
+.cart-section {
+  display: flex;
+  align-items: center;
+  gap:5px;
+}
+
+.cart-icon:hover{
+  transform: scale(1.1);
+}
+.cart-box {
+  padding: 20px;
+  border-radius: 10px; 
+  display: inline-block;
+}
+
+.cart-img {
+  width: 40px;   
+  height: 40px;
+}
+
+
+.join-seller-btn {
+  background-color: none;
+ 
+  
+  
+}
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; 
+  padding: 20px auto;
+   
+}
+
+
+    .container {
+  max-width: 900px;
+  margin: 20px auto;
+  background: linear-gradient(135deg, #fff4f5, #ffecec);
+  padding: 40px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  border-radius: 16px;
+  
+  
+}
+
+h1 {
+  text-align: center;
+  color: #d62f53;
+  margin-bottom: 25px;
+  font-size: 32px;
+  letter-spacing: 1px;
+}
+
+h2 {
+  color: #b4203a;
+  font-size: 22px;
+  margin-top: 30px;
+  margin-bottom: 12px;
+  border-left: 4px solid #ff2768;
+  padding-left: 12px;
+}
+
+p {
+  font-size: 16px;
+  line-height: 1.8;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+ul {
+  margin-left: 25px;
+  padding-left: 5px;
+}
+
+li {
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: #444;
+  line-height: 1.6;
+  list-style-type: disc;
+}
+
+.contact {
+  background: #ffe6eb;
+  padding: 20px;
+  border-left: 5px solid #ff2768;
+  border-radius: 10px;
+  margin-top: 25px;
+  font-size: 16px;
+}
+footer {
+  background: #ff2768;
+  padding: 6px 20px;
+  text-align: center;
+  font-size: 16px;
+  color: white;
+  width: 100%;
+  margin-top: auto; 
+}
+
+
+.footer a {
+  color: rgba(10, 9, 9, 0.829);
+  text-decoration: none;
+  margin: 0 10px;
+  font-weight: 500;
+  font-size: 20px; 
+}
+
+    .footer-links {
+      margin-bottom: 10px;
+      color: white;
+    }
+
+    
+
+    .footer a:hover {
+      text-decoration: underline;
+      color: white;
+    }
+    @keyframes fadeInSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (max-width: 768px) {
+  .contact-container {
+    width: 90%; 
+    padding: 20px;
+  }
+}
+
+
+
+  </style>
+</head>
+<body>
+   
+    <header>
+        
+                             <div class="logo">
+                        <img src="{% static 'images/logo.jpeg' %}" alt="Logo">
+        </div>
+
+        
+        
+        <form action="{% url 'search_products' %}" method="GET" class="search-bar">
+    <input type="text" name="q" placeholder="Search..." required>
+    <button type="submit"><i class="fas fa-search"></i></button>
+</form>
+        <nav>
+            <ul>
+              <nav class="header-nav">
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+             <a href="{% url 'homeee' %}" data-url="{% url 'homeee' %}" onclick="loadPage(event, this.dataset.url)">
+              <i class="fas fa-home"></i> Home</a>
+             <div class="category-wrapper">
+                <a href="#" class="nav-link" onclick="toggleCategoryModal(event)">
+                  <i class="fas fa-bars"></i>Category
+                </a>
+                <div id="categoryModal" class="category-modal">
+
+<div class="modal-content">
+  <span class="close" onclick="closeCategoryModal()"><i class="fas fa-times"></i></span>
+  <ul>
+    {% for category in categories %}
+      <li>
+        <a href="{% url 'category_products' category.id %}">
+          <i class="{{ category.icon_class }}"></i> {{ category.name }}
+        </a>
+      </li>
+    {% empty %}
+      <li>No categories available</li>
+    {% endfor %}
+  </ul>
+</div>
+                   </div>
+                  </div>
+                </div>
+                
+                <a href="{% url 'custsignup' %}" data-url="{% url 'custsignup' %}" onclick="loadPage(event, this.dataset.url)">
+                  <i class="fas fa-info-circle"></i>Sign Up</a>
+                  <a href="{% url 'custlogin' %}" data-url="{% url 'custlogin' %}" onclick="loadPage(event, this.dataset.url)">
+                <i class="fas fa-user-circle"></i>  Login</a>
+              
+                <a href="{% url 'cart_vie' %}" data-url="{% url 'cart_vie' %}" onclick="loadPage(event, this.dataset.url)">
+                  <i class="fas fa-shopping-cart"></i> Cart</a>
+              
+                <a href="{% url 'wishlistok' %}" data-url="{% url 'wishlistok' %}" onclick="loadPage(event, this.dataset.url)">
+                  <i class="fas fa-heart"></i> Wishlist</a>
+              
+               
+              
+{% if request.session.seller_id %}
+  
+  <a href="{% url 'seller_redirect' %}">
+    <i class="fas fa-user"></i> Sell
+  </a>
+  <a href="{% url 'sellerlogout' %}">
+    <i class="fas fa-sign-out-alt"></i> Logout
+  </a>
+{% else %}
+  
+  <a href="{% url 'sellersignup' %}">
+    <i class="fas fa-user-plus"></i> Join as Seller
+  </a>
+  <a href="{% url 'sellerlogin' %}">
+    <i class="fas fa-sign-in-alt"></i> Login
+  </a>
+{% endif %}
+                               </nav>
+               </ul>
+
+       
+    </header>
+
+
+<div class="page-wrapper">
+  <div class="container">
+  <h1>Exchange Policy</h1>
+  <p>We understand that sometimes a product may not be right for you. That's why we offer easy exchange options but only for eligible products.</p>
+
+  <h2>Which Products Can Be Exchanged?</h2>
+  <ul>
+    <li>Only non-customizable products are eligible for exchange.</li>
+    <li>Custom-made products are eligible for exchange only if customization option is not fulfiled.</li>
+  </ul>
+
+  <h2>How to Request an Exchange?</h2>
+  <ul>
+    <li>Contact the seller first and explain the issue.</li>
+    <li>If there is no response or an unfair refusal,
+     then contact the admin to resolve the issue.</li>
+  </ul>
+
+  <h2>Valid Reasons for Exchange</h2>
+  <p>You may request an exchange if:</p>
+  <ul>
+    <li>You received the wrong product, size, or color.</li>
+    <li>The product is damaged or defective.</li>
+    <li>The product is not as described or shown.</li>
+    
+  </ul>
+
+  <h2>Exchange Not Accepted If</h2>
+  <ul>
+    <li>You request an exchange after 3 days of delivery.</li>
+    <li>The product is used, washed, or damaged by you.</li>
+    <li>Original packaging, tags, or accessories are missing.</li>
+  </ul>
+
+  <h2>Conditions for Exchange</h2>
+  <ul>
+    <li>The product must be in original condition (unused, unwashed, undamaged).</li>
+    <li>It must include the original box, tags, and all accessories.</li>
+    <li>It must be securely packed for return.</li>
+    
+  </ul>
+
+  <h2>Exchange Time Limit</h2>
+  <ul>
+    <li>You must request the exchange within 3 days of receiving the product.</li>
+    <li>Late requests will not be accepted.</li>
+  </ul>
+
+  <h2>Important Notes</h2>
+  <ul>
+    <li>Try to resolve the issue with the seller first.</li>
+    <li>The admin will step in, if no solution is provided.</li>
+    <li>Exchange depends on availability of the replacement item.</li>
+   <li>If the replacement product is out of stock, you can either choose a refund or select another product from the same seller as a replacement.</li>
+  </ul>
+</div>
+</div>
+   <footer class="footer">
+  <div class="footer-links">
+    
+    <p>
+      <a href="{% url 'contactus' %}" style="color: white;">Contact Us |</a> 
+      <a href="{% url 'privacypolicy' %}" style="color: white;">Privacy Policy |</a> 
+      <a href="{% url 'custterms' %}" style="color: white;">Terms and Conditions |</a> 
+      <a href="{% url 'exchange' %}" style="color: white;">Exchange Policy |</a> 
+      <a href="{% url 'refund' %}" style="color: white;">Refund Policy |</a> 
+      <a href="{% url 'helpcenter' %}" style="color: white;">Help Center |</a> 
+      <a href="{% url 'aboutuss' %}" style="color: white;">About Us </a>
+    </p>
+    <p style="color: white;">&copy; 2025 CRAFTIFY</p>
+  </div>
+</footer>
+<script>
+  function toggleCategoryModal(event) {
+    event.preventDefault();
+    var modal = document.getElementById("categoryModal");
+    modal.style.display = (modal.style.display === "block") ? "none" : "block";
+  }
+
+  function closeCategoryModal() {
+    document.getElementById("categoryModal").style.display = "none";
+  }
+
+  
+  window.addEventListener("click", function(event) {
+    var modal = document.getElementById("categoryModal");
+    var button = document.querySelector(".category-wrapper");
+    if (!modal.contains(event.target) && !button.contains(event.target)) {
+      modal.style.display = "none";
+    }
+  });
+</script>
+</body>
+</html>

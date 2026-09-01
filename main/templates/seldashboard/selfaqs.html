@@ -1,0 +1,173 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Craftoria Seller FAQs</title>
+  <style>
+    
+
+    
+    
+  
+
+    h2 {
+      text-align: center;
+      color: #ff2768;
+      font-size: 32px;
+      margin-top: 40px;
+      margin-bottom: 30px;
+    }
+
+    .faq-container {
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 30px;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    details {
+      background-color: white;
+      border: 2px solid #ffe5ea;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    summary {
+      padding: 16px 24px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      color: #ff2768;
+      background-color: #ffe5ea;
+      list-style: none;
+    }
+
+    summary:hover {
+      background-color: #ffd8e2;
+    }
+
+    details[open] summary {
+      border-bottom: 1px solid #ffccd9;
+      border-radius: 10px 10px 0 0;
+    }
+
+    details > div {
+      padding: 16px 24px;
+      font-size: 15px;
+      color: #444;
+      background-color: #fff9fb;
+      border-radius: 0 0 10px 10px;
+    }
+
+    a {
+      color: #ff2768;
+      
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  
+
+    
+    @keyframes fadeInSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+  </style>
+</head>
+<body>
+    
+  <h2>Frequently Asked Questions</h2>
+  <div class="faq-container">
+
+    <details>
+      <summary>1. How do I add a new product?</summary>
+      <div>Go to “List Product”, fill in all details like name, price, customizable details, category, and upload clear images. Submit to list it.</div>
+    </details>
+
+    <details>
+      <summary>2. What is the “Customized” category option?</summary>
+      <div>Select “Customized” if your product can be personalized (e.g. custom colors, sizes, etc.). Mention customization options in the description.</div>
+    </details>
+
+    <details>
+      <summary>3. Where can I see all my listed products?</summary>
+      <div>Go to “Manage Products” to view, edit, or delete your listings.</div>
+    </details>
+
+    <details>
+      <summary>4. How do I know when someone is interested in my product?</summary>
+      <div>You will receive a chat message if a customer wants to ask something.</div>
+    </details>
+
+    <details>
+      <summary>5. How does the chat system work?</summary>
+      <div>Customers can click the “Chat Now” button on your product page. You can see customer messages on your dashboard and answer of that question.</div>
+    </details>
+
+    <details>
+      <summary>6. Can I see the customer's details before they place an order?</summary>
+      <div>No, for privacy reasons, customer contact details are only shared once an order is placed.</div>
+    </details>
+
+    <details>
+      <summary>7. What if I need to update my profile info?</summary>
+      <div>Go to “Seller Profile” page and edit it by updating your name, profile photo, bio, or contact info. It will reflect in your public profile and product pages.</div>
+    </details>
+
+    <details>
+      <summary>8. How do payments work on Craftify?</summary>
+      <div>After the customer confirms delivery, the payment is processed and released to your account through admin.</div>
+    </details>
+
+    <details>
+      <summary>9. How long does it take to receive payments?</summary>
+      <div>Usually within 5-7 working days after order confirmation and delivery.</div>
+    </details>
+
+    <details>
+      <summary>10. Can I cancel an order?</summary>
+      <div>Yes, if there's a valid reason. You can contact to admin.</div>
+    </details>
+
+    <details>
+      <summary>11. What if I receive a customization request I can't fulfill?</summary>
+      <div>Politely reply in the chat explaining the issue or suggest alternatives. Don't accept the order if it's not possible.</div>
+    </details>
+
+    <details>
+      <summary>12. Do I have to handle shipping?</summary>
+      <div>Yes, currently sellers manage shipping. Provide delivery details clearly and use a reliable courier.</div>
+    </details>
+
+    <details>
+      <summary>13. Is there a review or rating system?</summary>
+      <div>Yes, customers can leave reviews after purchase. Good reviews help build trust and increase your visibility.</div>
+    </details>
+
+    <details>
+      <summary>14. Where can I contact support if I face any problem?</summary>
+      <div>You can message us through the <a href="{% url 'contactus' %}">Contact Us</a>, or email at craftify966@gmail.com.</div>
+    </details>
+
+  </div>
+  
+  
+
+</body>
+</html>

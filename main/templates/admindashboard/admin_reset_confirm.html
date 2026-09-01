@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Password Reset</title>
+    <link rel="stylesheet" href="{% static 'admin/css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'admin/css/login.css' %}">
+</head>
+<body>
+<div id="content" class="colM">
+    <form method="post">
+        {% csrf_token %}
+        <p>
+            <label>New Password:</label><br>
+            <input type="password" name="password" required>
+        </p>
+        <p>
+            <label>Confirm Password:</label><br>
+            <input type="password" name="confirm_password" required>
+        </p>
+        <button type="submit" class="button">Reset Password</button>
+    </form>
+</div>
+</body>
+</html>

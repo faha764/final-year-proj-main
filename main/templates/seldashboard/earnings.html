@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Seller Earnings</title>
+  <style>
+   
+
+    h2 {
+      color: #ff2d5d;
+      text-align: center;
+    }
+
+    table {
+      width: 100%;
+      background: #fff;
+      border-radius: 10px;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+      text-align: left;
+    }
+
+    th {
+      background: #fafafa;
+    }
+
+    .widget {
+      background: #ff2768;
+      padding: 20px 40px;
+      border-radius: 20px;
+      color: white;
+      display: inline-block;
+      margin: 20px auto;
+    }
+
+    .center {
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+<div id="earnings-page">
+<h2>💰 Earnings Summary</h2>
+<div class="center" style="margin-bottom:15px;">
+  <form method="get" action="{% url 'seller_earnings' %}">
+    <button type="submit" name="filter" value="today">Today</button>
+    <button type="submit" name="filter" value="week">This Week</button>
+    <button type="submit" name="filter" value="month">This Month</button>
+  </form>
+</div>
+
+
+{% if product_earnings %}
+
+<div class="center">
+  <div class="widget">
+    <h4>Grand Total</h4>
+    <p>Rs. {{ grand_total|floatformat:2 }}</p>
+  </div>
+</div>
+
+<table>
+  <tr>
+    <th>Image</th>
+    <th>Product</th>
+    <th>Quantity Sold</th>
+    <th>Total Earned</th>
+    <th>Rating</th>
+  </tr>
+
+  {% for item in product_earnings %}
+  <tr>
+    <td>
+     {% if item.image_url %}
+    <img src="{{ item.image_url }}" width="60" style="border-radius:8px;">
+{% else %}
+    N/A
+{% endif %}
+    </td>
+    <td>{{ item.product_name }}</td>
+    <td>{{ item.total_quantity }}</td>
+    <td>Rs. {{ item.total_earned|floatformat:2 }}</td>
+    <td>
+      {% if item.avg_rating %}
+        {% for i in "12345" %}
+          {% if forloop.counter <= item.avg_rating %}
+            <span style="color:#f5c518;">★</span>
+          {% else %}
+            <span style="color:#ccc;">★</span>
+          {% endif %}
+        {% endfor %}
+        ({{ item.avg_rating|floatformat:1 }})
+      {% else %}
+        No Ratings
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+{% else %}
+<div class="center">
+  <h3>No earnings yet</h3>
+  <p>Your sold products and earnings will appear here.</p>
+</div>
+{% endif %}
+</div>
+</body>
+</html>

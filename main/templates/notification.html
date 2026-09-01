@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffc6c3;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        h3 {
+            background: #ff2768;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+        }
+        .notification-list {
+            list-style: none;
+            padding: 0;
+        }
+        .notification-item {
+            background: #f8f8f8;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.3s;
+        }
+        .notification-item.unread {
+            background: #ffe6e6;
+            font-weight: bold;
+        }
+        .notification-time {
+            font-size: 12px;
+            color: #888;
+        }
+        .mark-read {
+            background: #ff2768;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .mark-read:hover {
+            background: #d41b56;
+        }
+        .mark-read:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .see-more-btn {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: #ff2768;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .see-more-btn:hover {
+            background: #d41b56;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h3>{{ role|capfirst }} Notifications</h3>
+    <ul class="notification-list" id="notificationList">
+        {% for n in notifications %}
+            <li class="notification-item {% if not n.is_read %}unread{% endif %}" 
+    {% if forloop.counter > 5 %}style="display:none;"{% endif %}>
+
+                <span>{{ n.message }}</span>
+                <span class="notification-time">{{ n.created_at|date:"M d, Y H:i" }}</span>
+
+                {% if not n.is_read %}
+                    <a href="{% url 'mark_notification_read' n.id role %}">
+                        <button class="mark-read">Mark as Read</button>
+                    </a>
+                {% else %}
+                    <button class="mark-read" disabled>Read</button>
+                {% endif %}
+            </li>
+        {% empty %}
+            <li>No notifications found.</li>
+        {% endfor %}
+    </ul>
+
+    {% if notifications|length > 5 %}
+        <button class="see-more-btn" id="seeMoreBtn">See More</button>
+    {% endif %}
+</div>
+
+<script>
+    let visibleCount = 5;  // first 5 visible
+    const allItems = document.querySelectorAll('.notification-item');
+    const seeMoreBtn = document.getElementById('seeMoreBtn');
+
+    if (seeMoreBtn) {
+        seeMoreBtn.addEventListener('click', () => {
+            // Show next 5 items
+            for (let i = visibleCount; i < visibleCount + 5 && i < allItems.length; i++) {
+                allItems[i].style.display = 'flex';
+            }
+            visibleCount += 5;
+
+            // Hide button if no more notifications
+            if (visibleCount >= allItems.length) {
+                seeMoreBtn.style.display = 'none';
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

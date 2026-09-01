@@ -1,0 +1,691 @@
+{% load static %}
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout</title>
+  
+  <style>
+   
+    
+    .error {
+      width: 80%;
+      font-size: 13px;
+      color: red;
+      margin-bottom: 10px;
+      text-align: left;
+    }
+    
+    
+    
+    .disabled-btn {
+      background-color: #ff2768 !important;
+      cursor: not-allowed !important;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    html, body {
+      height: 100%;
+    }
+    body {
+        display: flex;
+      flex-direction: column;
+      
+    
+      font-family: Arial, sans-serif;
+      background-color: #ffc6c3;
+      margin: 0;
+      padding: 0;
+    } .page-content {
+      flex: 1;
+    }
+
+    
+    
+   
+.header-container {
+  background-color: #ffb6b3; 
+  display: flex;
+  
+  align-items: center;
+  padding: 15px 50px; 
+   
+}
+
+ header {
+    background: #ffb6b3;
+    display: flex;
+    align-items: center;
+    padding: 15px 50px; 
+}
+
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.logo img {
+    width: 50px;
+    height: auto;
+    background-color: #f8c8c4;
+    padding: 5px;
+    border-radius: 50%;
+}
+
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 20px;
+}
+.search-bar input {
+    padding: 8px;
+    width: 200px;
+    font-weight: bold;
+    font-size: 14px;
+    border: 2px solid #ff6685;
+    border-radius: 5px;
+}
+.search-bar button {
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: bold;
+    background: #ff2768;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+
+nav {
+    margin-left: auto; 
+}
+.nav-link, a {
+    color: black;
+    text-decoration: none;
+    margin-right: 12px;
+    font-size: 13px;
+    font-weight: none;
+}
+.nav-link:hover,
+a:hover {
+    color: #555;
+    text-decoration: underline;
+}
+i {
+    margin-right: 5px;
+}
+
+
+.closeBtn {
+  float: left;
+  font-size: 22px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+
+
+.category-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+
+  .category-modal {
+    display: none;
+    position: absolute;
+    top: 100%; 
+    left: 0;
+    width: 280px; 
+    background: #fff7f8;
+    padding: 20px;
+    margin-top: 5px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    border: 2px solid #ff2768;
+    z-index: 9999;
+  }
+
+  .modal-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .modal-content li a {
+    font-size: 15px;
+    font-weight: bold;
+    color: #b0374e;
+    background-color: #ffe5e2;
+    padding: 6px 12px;
+    border-radius: 8px;
+    text-align: center;
+    transition: all 0.3s ease;
+    display: block;
+  }
+
+  .modal-content li a:hover {
+    background-color: #ff2768;
+    color: white;
+  }
+
+  .modal-content .close {
+    float: right;
+    font-size: 18px;
+    color: #e6003d;
+    cursor: pointer;
+    margin-bottom: 10px;
+  }
+
+.cart-section {
+  display: flex;
+  align-items: center;
+  gap:5px;
+}
+
+.cart-icon:hover{
+  transform: scale(1.1);
+}
+.cart-box {
+  padding: 20px;
+  border-radius: 10px; 
+  display: inline-block;
+}
+
+.cart-img {
+  width: 40px;   
+  height: 40px;
+}
+
+
+.join-seller-btn {
+  background-color: none;
+ 
+  
+  
+}
+
+.page-wrapper {
+  display: flex;
+  justify-content: center;   
+  align-items: center;       
+  min-height: 0vh;         
+   padding-bottom: 100px; 
+}
+        .checkout-container {
+            width: 800px;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: white;
+            font-size: 20px;
+            font-weight: bold;
+            color: #ff2768;
+            border-bottom: 2px solid  #ff2768;
+        }
+        .back-arrow {
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .checkout-header {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff2768;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ff2768;
+            padding-bottom: 10px;
+        }
+        .checkout-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #ff2768;
+        }
+        .checkout-item img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        .item-details {
+            flex: 1;
+            margin-left: 15px;
+        }
+        .item-details h4 {
+            margin: 5px 0;
+            font-size: 18px;
+        }
+        .item-details p {
+            color: #555;
+            margin: 5px 0;
+        }
+        .total-summary {
+            text-align: right;
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 10px;
+            color: #ff2768;
+        }
+        .shipping-fee {
+            text-align: right;
+            font-size: 14px;
+            color: black;
+            margin-top: 10px;
+        }
+        .final-total {
+            text-align: right;
+            font-size: 22px;
+            font-weight: bold;
+            color: #ff2768;
+            margin-top: 10px;
+        }
+        .proceed-to-payment-btn {
+            display: block;
+            width: 30%;
+            background: #ff2768;
+            color: white;
+            border: none;
+            margin: 20px auto 0 auto;
+            padding: 12px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .address-section {
+            background: #ffc6c3;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .address-section h3 {
+            margin-bottom: 10px;
+            text-align: center;
+            color: #ff2768;
+        }
+        .address-section input {
+            width: calc(100% - 16px);
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: block;
+        }
+       
+    footer {
+      background: #ff2768;
+      padding: 18px;
+      text-align: center;
+      font-size: 20px;
+      color: white;
+      width: 100%;
+      margin-top: auto;
+    }
+
+    .footer-links {
+      margin-bottom: 10px;
+      color: white;
+    }
+
+    .footer a {
+      color: rgba(10, 9, 9, 0.829);
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: 500;
+      font-size: 20px;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+    <header>
+        
+               <div class="logo">
+                        <img src="{% static 'images/logo.jpeg' %}" alt="Logo">
+        </div>
+
+        
+        
+        <form action="{% url 'search_products' %}" method="GET" class="search-bar">
+    <input type="text" name="q" placeholder="Search..." required>
+    <button type="submit"><i class="fas fa-search"></i></button>
+</form>
+        <nav>
+            <ul>
+              <nav class="header-nav">
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+            
+             <a href="{% url 'homeee' %}" data-url="{% url 'homeee' %}" onclick="loadPage(event, this.dataset.url)">
+              <i class="fas fa-home"></i> Home</a>
+              
+             <div class="category-wrapper">
+                <a href="#" class="nav-link" onclick="toggleCategoryModal(event)">
+                  <i class="fas fa-bars"></i>Category
+                </a>
+                <div id="categoryModal" class="category-modal">
+
+<div class="modal-content">
+  <span class="close" onclick="closeCategoryModal()"><i class="fas fa-times"></i></span>
+  <ul>
+    {% for category in categories %}
+      <li>
+        <a href="{% url 'category_products' category.id %}">
+          <i class="{{ category.icon_class }}"></i> {{ category.name }}
+        </a>
+      </li>
+    {% empty %}
+      <li>No categories available</li>
+    {% endfor %}
+  </ul>
+                   </div>
+                  </div>
+                </div>
+                
+                {% if request.session.customer_id %}
+  <a href="{% url 'customerdashboard' %}">
+    <i class="fas fa-user"></i> My Account
+  </a>
+  <a href="{% url 'customerlogout' %}">
+    <i class="fas fa-sign-out-alt"></i> Logout
+  </a>
+{% else %}
+  <a href="{% url 'custsignup' %}">
+    <i class="fas fa-user-plus"></i> Sign Up
+  </a>
+  <a href="{% url 'custlogin' %}">
+    <i class="fas fa-sign-in-alt"></i> Login
+  </a>
+{% endif %}
+              
+                <a href="{% url 'cart_vie' %}" data-url="{% url 'cart_vie' %}" onclick="loadPage(event, this.dataset.url)">
+                  <i class="fas fa-shopping-cart"></i> Cart</a>
+              
+                <a href="{% url 'wishlistok' %}" data-url="{% url 'wishlistok' %}" onclick="loadPage(event, this.dataset.url)">
+                  <i class="fas fa-heart"></i> Wishlist</a>
+              
+               
+              
+             {% if request.session.seller_id %}
+ 
+  <a href="{% url 'seller_redirect' %}">
+    <i class="fas fa-user"></i> Sell
+  </a>
+  <a href="{% url 'sellerlogout' %}">
+    <i class="fas fa-sign-out-alt"></i> Logout
+  </a>
+{% else %}
+  
+  <a href="{% url 'sellersignup' %}">
+    <i class="fas fa-user-plus"></i> Join as Seller
+  </a>
+  <a href="{% url 'sellerlogin' %}">
+    <i class="fas fa-sign-in-alt"></i> Login
+  </a>
+{% endif %}
+                               </nav>
+               </ul>
+
+       
+    </header>
+
+
+  <div class="checkout-container">
+    <div class="header">Checkout</div>
+
+    <div class="checkout-items" id="checkout-items">
+    
+    </div>
+   <div style="text-align:right; font-weight:bold; color:#ff2768;">
+  <div>Subtotal: <span id="subtotal">Rs. 0.00</span></div>
+  <div>Shipping: <span id="shipping">Rs. 0.00</span></div></div>
+  <div style="color: green;text-align:right; font-weight:bold;">Total: <span id="total">Rs. 0.00</span></div>
+
+
+
+   
+
+    <div class="address-section">
+      <h3>Shipping Address</h3>
+      <input type="text" id="customer-name" maxlength="25"placeholder="Full Name" required>
+      <div class="error" id="nameError">Only alphabets allowed.</div>
+      <input type="text" id="customer-address"maxlength="70" placeholder="Complete Address" required>
+      <div class="error" id="addressError">Address cannot be empty.</div>
+      <input type="text" id="customer-city" maxlength="25"placeholder="City" required>
+      <div class="error" id="cityError">Only alphabets allowed.</div>
+      <input type="tel" id="customer-phone"maxlength="11" placeholder="03XXXXXXXXX" required>
+      <div class="error" id="phoneError">Valid Pakistani phone required.</div>
+      <input type="email" id="customer-email"maxlength="30" placeholder="Email Address" required>
+      <div class="error" id="emailError">Enter a valid email address.</div>
+    </div>
+<input type="hidden" id="csrf-token" value="{{ csrf_token }}">
+<input type="hidden" id="customer-id" value="{{ request.session.customer_id }}">
+
+
+    <button class="proceed-to-payment-btn disabled-btn" id="proceed-to-payment-btn" disabled>Proceed to Payment</button>
+  </div>
+  <footer class="footer">
+  <div class="footer-links">
+    
+    <p style="color: white;">
+      <a href="{% url 'contactus' %}" style="color: white;">Contact Us</a> |
+      <a href="{% url 'privacypolicy' %}" style="color: white;">Privacy Policy</a> |
+      <a href="{% url 'custterms' %}" style="color: white;">Terms and Conditions</a> |
+      <a href="{% url 'exchange' %}" style="color: white;">Exchange Policy</a> |
+      <a href="{% url 'refund' %}" style="color: white;">Refund Policy</a> |
+      <a href="{% url 'helpcenter' %}" style="color: white;">Help Center</a> |
+      <a href="{% url 'aboutuss' %}" style="color: white;">About Us</a>
+    </p>
+    <p style="color: white;">&copy; 2025 CRAFTIFY</p>
+  </div>
+</footer>
+
+  <script>
+  let subtotal = 0;
+  let total = 0;
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const items = JSON.parse(localStorage.getItem("cartItems")) || [];
+    const sellerSet = new Set();
+    const checkoutItemsContainer = document.getElementById("checkout-items");
+
+    items.forEach(item => {
+      subtotal += item.price * item.quantity;
+
+      if (item.seller_id) {
+        sellerSet.add(item.seller_id);
+      }
+
+      checkoutItemsContainer.innerHTML += `
+        <div class="checkout-item" style="display:flex; align-items:center; margin-bottom:15px;">
+          <img src="${item.image}" alt="Product Image" style="width:100px; height:auto; margin-right:15px;">
+          <div class="item-details">
+            <h4>${item.name}</h4>
+            <p>Price: Rs.${item.price}</p>
+            <p>Quantity: ${item.quantity}</p>
+            <p><strong>Sold by:</strong> ${item.seller_name || "Unknown Seller"}</p>
+          </div>
+        </div>`;
+    });
+
+    const shipping = sellerSet.size * 150;
+    total = subtotal + shipping;
+
+    document.getElementById("subtotal").textContent = `Rs. ${subtotal.toFixed(2)}`;
+    document.getElementById("shipping").textContent = `Rs. ${shipping.toFixed(2)}`;
+    document.getElementById("total").textContent = `Rs. ${total.toFixed(2)}`;
+  });
+
+ 
+  function getCSRFToken() {
+    return document.getElementById("csrf-token").value;
+  }
+
+  const name = document.getElementById("customer-name");
+  const address = document.getElementById("customer-address");
+  const city = document.getElementById("customer-city");
+  const phone = document.getElementById("customer-phone");
+  const email = document.getElementById("customer-email");
+
+  const proceedBtn = document.getElementById("proceed-to-payment-btn");
+
+  const nameError = document.getElementById("nameError");
+  const cityError = document.getElementById("cityError");
+  const addressError = document.getElementById("addressError");
+  const phoneError = document.getElementById("phoneError");
+  const emailError = document.getElementById("emailError");
+
+  
+  const savedData = JSON.parse(localStorage.getItem("shippingAddress"));
+  if (savedData) {
+    name.value = savedData.name || "";
+    address.value = savedData.address || "";
+    city.value = savedData.city || "";
+    phone.value = savedData.phone || "";
+    email.value = savedData.email || "";
+  }
+function removeLeadingSpaces(input) {
+  input.value = input.value.replace(/^\s+/, ""); 
+}
+
+
+[name, address, city, phone, email].forEach(field => {
+  field.addEventListener("input", () => {
+    removeLeadingSpaces(field);
+    validateInputs();
+  });
+});
+
+  function validateInputs() {
+    let isValid = true;
+
+    const nameVal = name.value.trim();
+    const addressVal = address.value.trim();
+    const cityVal = city.value.trim();
+    const phoneVal = phone.value.trim();
+    const emailVal = email.value.trim();
+
+    const alphaPattern = /^[A-Za-z\s]+$/;
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const phonePattern = /^03[0-9]{9}$/;
+
+    nameError.style.display = alphaPattern.test(nameVal) ? "none" : (isValid = false, "block");
+    addressError.style.display = addressVal !== "" ? "none" : (isValid = false, "block");
+    cityError.style.display = alphaPattern.test(cityVal) ? "none" : (isValid = false, "block");
+    emailError.style.display = emailPattern.test(emailVal) ? "none" : (isValid = false, "block");
+    phoneError.style.display = phonePattern.test(phoneVal) ? "none" : (isValid = false, "block");
+
+    proceedBtn.disabled = !isValid;
+    proceedBtn.classList.toggle("disabled-btn", !isValid);
+  }
+
+  validateInputs();
+
+  name.addEventListener("input", validateInputs);
+  address.addEventListener("input", validateInputs);
+  city.addEventListener("input", validateInputs);
+  phone.addEventListener("input", () => {
+    phone.value = phone.value.replace(/[^0-9]/g, "");
+    validateInputs();
+  });
+  
+  email.addEventListener("input", validateInputs);
+
+  proceedBtn.addEventListener("click", function () {
+    const customerId = document.getElementById("customer-id").value;
+
+    const shippingData = {
+      
+  customer_id: customerId,
+  full_name: name.value.trim(),
+  email: email.value.trim(),
+  address: address.value.trim(),
+  city: city.value.trim(),
+  phone: phone.value.trim(),
+};
+
+   
+    localStorage.setItem("totalPrice", total.toFixed(2));
+    localStorage.setItem("subtotal", subtotal.toFixed(2));
+    localStorage.setItem("shippingAddress", JSON.stringify(shippingData));
+
+    
+    
+    proceedBtn.innerText = "Proceed to Payment";
+
+    fetch("{% url 'save_shipping' %}", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": getCSRFToken(),
+      },
+      body: JSON.stringify(shippingData),
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.message === "ok") {
+          window.location.href = "{% url 'selectpayment' %}";
+        } else {
+          alert("Error: " + data.error);
+          proceedBtn.disabled = false;
+          proceedBtn.innerText = "Proceed to Payment";
+        }
+      })
+      .catch(err => {
+        alert("Something went wrong. Please try again.");
+        proceedBtn.disabled = false;
+        proceedBtn.innerText = "Proceed to Payment";
+      });
+  });
+</script>
+
+
+  <script>
+  function toggleCategoryModal(event) {
+    event.preventDefault();
+    var modal = document.getElementById("categoryModal");
+    modal.style.display = (modal.style.display === "block") ? "none" : "block";
+  }
+
+  function closeCategoryModal() {
+    document.getElementById("categoryModal").style.display = "none";
+  }
+
+
+  window.addEventListener("click", function(event) {
+    var modal = document.getElementById("categoryModal");
+    var button = document.querySelector(".category-wrapper");
+    if (!modal.contains(event.target) && !button.contains(event.target)) {
+      modal.style.display = "none";
+    }
+  });
+</script>
+</body>
+</html>

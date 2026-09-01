@@ -1,0 +1,269 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Products</title>
+    <style>
+       
+        h3 {
+            font-size: 30px;
+            margin-bottom: 10px;
+            color: #ff2768;
+        }
+        .search-container {
+            display: flex;
+            align-items: center;
+            width: 200px;
+            margin-bottom: 10px;
+        }
+        .search-container input {
+            flex: 1;
+            padding: 5px;
+            border-radius: 15px;
+            border: 1px solid #ccc;
+            font-size: 12px;
+            width: 140px;
+        }
+      .search-btn {
+    width: 40px;
+    height: 30px;
+    font-size: 14px;
+    background-color: #ff2768;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 8px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.search-btn:hover {
+    background-color: #e0225c; 
+}
+
+
+        table {
+            width: 100%;
+            background-color: white;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        th {
+            background-color: #ff2768;
+            color: white;
+        }
+        button {
+            padding: 5px;
+            cursor: pointer;
+            border: none;
+        }
+        .add-btn {
+            background-color: #ff2768;
+            color: white;
+            padding: 8px 15px;
+            margin-top: 10px;
+        }
+        .edit-btn {
+            background-color: #ff2768;
+            color: white;
+            padding: 5px;
+        }
+        .delete-btn {
+            background-color: green;
+            color: white;
+            padding: 5px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            padding-top: 60px;
+        }
+        .modal-content {
+            background-color: #ffc6c3;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover, .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        input[type="text"], input[type="number"], input[type="file"] {
+            padding: 5px;
+            margin-bottom: 10px;
+            width: 100%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button[type="submit"] {
+            background-color: green;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            cursor: pointer;
+        }
+        button[type="button"] {
+            background-color: #ff2768;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h3>Manage Products</h3>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+   <form method="GET" action="{% url 'manproductok' %}" class="search-container">
+    <input type="text" name="q" placeholder="Search product name..." value="{{ request.GET.q }}">
+    <button class="search-btn" type="submit" style=" background-color: #ff2768; margin-left: 10px; margin-bottom: 10px;">
+        <i class="fas fa-search"></i>
+    </button>
+</form>
+
+
+
+
+    <table id="product-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Image</th>
+                <th>Product Name</th>
+                <th>Category Name</th>
+                <th>Price (Rs)</th>
+                <th>Quantity</th>
+                <th>Customized (Yes/No)</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+{% for product in products %}
+    <tr>
+        <td>{{ product.id }}</td>
+        <td>
+            {% if product.image %}
+                <img src="{{ product.image.url }}" width="50" height="50">
+            {% else %}
+                <img src="{% static 'images/default.jpeg' %}" width="50" height="50">
+            {% endif %}
+        </td>
+        <td>{{ product.name }}</td>
+        <td>{{ product.category.name }}</td>
+        <td>{{ product.price }}</td>
+        <td>{{ product.quantity }}</td>
+        <td>{{ product.customized|yesno:"Yes,No" }}</td>
+        <td>
+           
+            <a href="{% url 'editproduct' product.id %}" class="edit-btn">Edit</a>
+
+          <form id="deleteForm{{ product.id }}" method="POST" action="{% url 'deleteproduct' product.id %}" style="display:inline;">
+    {% csrf_token %}
+    <button type="submit" class="delete-btn" onclick="return confirm('Are you sure you want to delete this product?');">Delete</button>
+  </form>
+
+        </td>
+    </tr>
+{% empty %}
+    <tr>
+        <td colspan="8">No products added yet.</td>
+    </tr>
+{% endfor %}
+</tbody>
+    </table>
+
+   
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeDeleteModal()">&times;</span>
+            <h3>Are you sure you want to delete this product?</h3>
+            <button type="button" onclick="confirmDelete()">Yes, Delete</button>
+            <button type="button" onclick="closeDeleteModal()">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        
+
+        let productToDelete = null;
+
+        function populateTable(productList = products) {
+            const productTable = document.getElementById("product-list");
+            productTable.innerHTML = "";
+            productList.forEach(product => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${product.id}</td>
+                    <td><img src="${product.image}" width="50" onerror="this.onerror=null; this.src='images/default.jpeg';"></td>
+                    <td>${product.name}</td>
+                    <td>${product.category}</td>
+                    <td>${product.price}</td>
+                    <td>${product.quantity}</td>
+                    <td>${product.customized}</td>
+                    <td>
+                        <button class="edit-btn" onclick="openEditModal(${product.id})">Edit</button>
+                        <button class="delete-btn" onclick="openDeleteModal(${product.id})">Delete</button>
+                    </td>
+                `;
+                productTable.appendChild(row);
+            });
+        }
+
+        function searchProduct() {
+            const searchTerm = document.getElementById("search").value.toLowerCase();
+            const filtered = products.filter(product =>
+                product.name.toLowerCase().includes(searchTerm)
+            );
+            populateTable(filtered);
+        }
+
+       
+
+       function openDeleteModal(productId) {
+      if (confirm("Are you sure you want to delete this product?")) {
+          const form = document.getElementById("deleteForm");
+          form.action = `/deleteproduct/${productId}/`;  
+          form.submit();
+      }
+  }
+
+        function closeDeleteModal() {
+            document.getElementById("deleteModal").style.display = "none";
+        }
+
+        function confirmDelete() {
+            products = products.filter(p => p.id !== productToDelete);
+            populateTable();
+            closeDeleteModal();
+        }
+
+        
+      
+        populateTable();
+    </script>
+</body>
+</html>
+

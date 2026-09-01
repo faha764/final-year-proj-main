@@ -1,0 +1,341 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Customer Signup</title>
+  <style>
+    
+    * { 
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+       body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f8c8c4;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow-y: auto;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  overflow-y: auto;    
+}
+
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; 
+  
+}
+
+    
+    
+
+    .container {
+      display: flex;
+      width: 850px;
+      background: white;
+      border-radius: 10px;
+      align-items: center;
+      overflow: hidden;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .image-section {
+      width: 50%;
+    }
+
+    .image-section img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .Signup-section {
+      width: 50%;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .head-container {
+      margin-bottom: 20px;
+    }
+
+    .head-container h1 {
+      font-size: 28px;
+      font-weight: bold;
+      text-align: center;
+    }
+.eye-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
+  color: #555;
+}
+
+    .form-container {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+h1{font-size: 20px;
+color: #ff2768;}
+    .form-container label {
+      width: 100%;
+      font-weight: bold;
+      text-align: left;
+      margin-bottom: 5px;
+    }
+.main-wrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
+}
+
+    .form-container input {
+      width: 80%;
+      padding: 12px;
+      margin-bottom: 5px;
+      border: 2px solid #ff2768;
+      border-radius: 5px;
+      box-shadow: 5px 5px #ffc6c3;
+      font-size: 16px;
+       overflow-y: auto; 
+  height: auto;
+  max-height: fit-content;
+  overflow: visible;
+    }
+
+    .error {
+      width: 80%;
+      font-size: 13px;
+      color: red;
+      margin-bottom: 10px;
+      text-align: left;
+    }
+
+    .password-container {
+      width: 80%;
+      position: relative;
+    }
+
+    .password-container input {
+      width: 100%;
+      padding-right: 40px;
+    }
+
+    .eye-icon {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .signup-btn {
+      width: 80%;
+      height: 50px;
+      font-size: 16px;
+      background-color: #ff2768;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: not-allowed;
+      box-shadow: 5px 5px black;
+      margin-top: 10px;
+    }
+
+    .signup-btn.enabled {
+      background-color:  #ff2768;
+      cursor: pointer;
+    }
+  
+
+  
+
+  </style>
+</head>
+<body>
+  
+   <div class="page-wrapper">
+   
+    <main class="main-wrapper">
+  <div class="container">
+    <div class="image-section">
+      <img src="https://images.pexels.com/photos/8801188/pexels-photo-8801188.jpeg?auto=compress&cs=tinysrgb&w=600" />
+    </div>
+
+    <div class="Signup-section">
+      <div class="head-container">
+        <h1>Customer Signup</h1>
+      </div>
+      {% if messages %}
+    {% for message in messages %}
+      <div style="color: green; font-weight: bold; margin-bottom: 10px;">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+
+      
+        <form method="POST" class="form-container">
+  {% csrf_token %}
+        <label>Name</label>
+        <input type="text" id="name" name="name"maxlength="25" placeholder="Enter Name" required />
+
+        <div class="error" id="nameError"></div>
+
+        <label>Email</label>
+        <input type="email" id="email" name="email"maxlength="40" placeholder="Enter Gmail" required />
+
+        <div class="error" id="emailError"></div>
+
+        <label>Contact No</label>
+        <input type="text" id="contact" name="contact" placeholder="03XXXXXXXXX" maxlength="11" required />
+        <div class="error" id="contactError"></div>
+
+       
+<label>Password</label>
+<div class="password-container">
+  <input type="password" id="password" name="password" minlength="8" maxlength="15" placeholder="Enter Password" required />
+  <i id="toggleEye" class="eye-icon fas fa-eye" onclick="togglePassword('password','toggleEye')"></i>
+</div>
+<div class="error" id="passwordLengthError"></div>
+
+
+<label>Confirm Password</label>
+<div class="password-container">
+  <input type="password" id="confirm" maxlength="15" minlength="8" placeholder="Enter Confirm Password" required />
+  <i id="toggleEyeConfirm" class="eye-icon fas fa-eye" onclick="togglePassword('confirm','toggleEyeConfirm')"></i>
+</div>
+<div class="error" id="confirmError"></div>
+   
+
+
+        <button id="signup-btn" class="signup-btn" disabled type="submit">SIGN UP</button>
+
+        </form>
+    </div>
+  </div></main>
+
+</div>
+<script>
+  function togglePassword(fieldId, toggleId) {
+    const field = document.getElementById(fieldId);
+    const toggle = document.getElementById(toggleId);
+
+    if (field.type === "password") {
+      field.type = "text";
+      toggle.classList.remove("fa-eye");
+      toggle.classList.add("fa-eye-slash");
+    } else {
+      field.type = "password";
+      toggle.classList.remove("fa-eye-slash");
+      toggle.classList.add("fa-eye");
+    }
+  }
+
+  const name = document.getElementById("name");
+  const email = document.getElementById("email");
+  const contact = document.getElementById("contact");
+  const password = document.getElementById("password");
+  const confirm = document.getElementById("confirm");
+  const signupBtn = document.getElementById("signup-btn");
+
+  const nameError = document.getElementById("nameError");
+  const emailError = document.getElementById("emailError");
+  const contactError = document.getElementById("contactError");
+  const passwordLengthError = document.getElementById("passwordLengthError");
+  const confirmError = document.getElementById("confirmError");
+
+  function removeLeadingSpaces(input) {
+    input.value = input.value.replace(/^\s+/, "");
+  }
+
+  function validateForm() {
+    let valid = true;
+
+    
+    if (!/^[A-Za-z\s]+$/.test(name.value.trim())) {
+      nameError.textContent = "Only alphabets are allowed in name.";
+      valid = false;
+    } else {
+      nameError.textContent = "";
+    }
+
+    
+    if (!/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i.test(email.value.trim())) {
+      emailError.textContent = "Invalid email format.";
+      valid = false;
+    } else {
+      emailError.textContent = "";
+    }
+
+    
+    if (!/^03[0-9]{9}$/.test(contact.value.trim())) {
+      contactError.textContent = "Enter valid Pakistani number like 03001234567.";
+      valid = false;
+    } else {
+      contactError.textContent = "";
+    }
+
+   
+    if (password.value.length < 8) {
+      passwordLengthError.textContent = "Password must be at least 8 characters.";
+      valid = false;
+    } else {
+      passwordLengthError.textContent = "";
+    }
+
+    
+    if (confirm.value && password.value !== confirm.value) {
+      confirmError.textContent = "Passwords do not match.";
+      valid = false;
+    } else {
+      confirmError.textContent = "";
+    }
+
+    signupBtn.disabled = !valid;
+    signupBtn.classList.toggle("enabled", valid);
+  }
+
+  
+  name.addEventListener("input", () => { removeLeadingSpaces(name); validateForm(); });
+  email.addEventListener("input", () => { removeLeadingSpaces(email); validateForm(); });
+  contact.addEventListener("input", () => {
+    contact.value = contact.value.replace(/[^0-9]/g, "");
+    removeLeadingSpaces(contact);
+    validateForm();
+  });
+  password.addEventListener("input", () => { removeLeadingSpaces(password); validateForm(); });
+  confirm.addEventListener("input", () => { removeLeadingSpaces(confirm); validateForm(); });
+</script>
+
+
+  
+</body>
+</html>

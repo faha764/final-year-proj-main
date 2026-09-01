@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Edit Product</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fff0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    .edit-form {
+      background-color: #ffc6c3;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      width: 600px;
+    }
+
+    .edit-form h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #ff2768;
+    }
+
+    .edit-form label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .edit-form input[type="text"],
+    .edit-form input[type="number"],
+    .edit-form input[type="file"],
+    .edit-form textarea,
+    .edit-form select {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 5px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .edit-form textarea {
+      height: 70px;
+      resize: none;
+    }
+
+    .img-preview {
+      max-width: 100px;
+      margin-top: 10px;
+      display: block;
+      border-radius: 6px;
+      border: 1px solid #aaa;
+    }
+
+    .edit-form button {
+      background-color: #ff2768;
+      color: #fff;
+      border: none;
+      margin-top: 8px;
+      padding: 10px 20px;
+      width: 30%;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .edit-form button:hover {
+      background-color: #e01a5e;
+    }
+
+    .edit-form a {
+      text-decoration: none;
+      display: block;
+      margin-top: 15px;
+      color: #ff2768;
+      text-align: center;
+    }
+
+    
+    .error-msg {
+      font-size: 13px;
+      color: green;
+      margin-bottom: 10px;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <form class="edit-form" id="editProductForm" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <h2>Edit Product</h2>
+
+    <label>Product Name</label>
+    {{ form.name }}
+    <span class="error-msg" id="name-error"></span>
+
+    <label>Description</label>
+    {{ form.description }}
+    <span class="error-msg" id="desc-error"></span>
+
+    <label>Category</label>
+    {{ form.category }}
+
+    <label>Price</label>
+    {{ form.price }}
+    <span class="error-msg" id="price-error"></span>
+
+    <label>Quantity</label>
+    {{ form.quantity }}
+    <span class="error-msg" id="quantity-error"></span>
+
+    <label>Customized</label>
+    <select name="customized">
+      <option value="Yes" {% if form.customized.value == "Yes" %}selected{% endif %}>Yes</option>
+      <option value="No" {% if form.customized.value == "No" %}selected{% endif %}>No</option>
+    </select>
+
+    <label>Upload New Image</label>
+    <input type="file" name="image" accept="image/*" onchange="previewImage(event)">
+
+    {% if product.image %}
+      <img id="preview" src="{{ product.image.url }}" alt="Current Image" class="img-preview">
+    {% else %}
+      <img id="preview" class="img-preview" style="display: none;" />
+    {% endif %}
+
+    <button type="submit" id="updateBtn">Update Product</button>
+    <a href="{% url 'manproductok' %}">← Back to Manage Products</a>
+  </form>
+
+  <script>
+   
+    function previewImage(event) {
+      const reader = new FileReader();
+      reader.onload = function () {
+        const output = document.getElementById('preview');
+        output.src = reader.result;
+        output.style.display = 'block';
+      };
+      reader.readAsDataURL(event.target.files[0]);
+    }
+
+   
+    const nameInput = document.getElementById("id_name");
+    const descInput = document.getElementById("id_description");
+    const priceInput = document.getElementById("id_price");
+    const qtyInput = document.getElementById("id_quantity");
+    const updateBtn = document.getElementById("updateBtn");
+
+    const nameError = document.getElementById("name-error");
+    const descError = document.getElementById("desc-error");
+    const priceError = document.getElementById("price-error");
+    const qtyError = document.getElementById("quantity-error");
+
+    let touched = { name: false, desc: false, price: false, qty: false };
+
+    function validateForm() {
+      let valid = true;
+
+      
+      if (touched.name) {
+        if (!nameInput.value.trim()) {
+          nameError.textContent = "Name cannot be empty or start with a space.";
+          valid = false;
+        } else {
+          nameError.textContent = "";
+        }
+      }
+
+      if (touched.desc) {
+        if (!descInput.value.trim()) {
+          descError.textContent = "Description cannot be empty or start with a space.";
+          valid = false;
+        } else {
+          descError.textContent = "";
+        }
+      }
+
+     
+      if (touched.price) {
+        if (priceInput.value.trim() === "" || parseFloat(priceInput.value) < 0) {
+          priceError.textContent = "Price cannot be negative or empty.";
+          valid = false;
+        } else {
+          priceError.textContent = "";
+        }
+      }
+
+      
+      if (touched.qty) {
+        if (qtyInput.value.trim() === "" || parseInt(qtyInput.value) < 0) {
+          qtyError.textContent = "Quantity cannot be negative or empty.";
+          valid = false;
+        } else {
+          qtyError.textContent = "";
+        }
+      }
+
+      updateBtn.disabled = !valid;
+      updateBtn.style.cursor = valid ? "pointer" : "not-allowed";
+    }
+
+   
+    nameInput.addEventListener("input", () => {
+      touched.name = true;
+      if (nameInput.value.startsWith(" ")) {
+        nameInput.value = nameInput.value.trimStart();
+      }
+      validateForm();
+    });
+
+    descInput.addEventListener("input", () => {
+      touched.desc = true;
+      if (descInput.value.startsWith(" ")) {
+        descInput.value = descInput.value.trimStart();
+      }
+      validateForm();
+    });
+
+    priceInput.addEventListener("input", () => {
+      touched.price = true;
+      validateForm();
+    });
+
+    qtyInput.addEventListener("input", () => {
+      touched.qty = true;
+      validateForm();
+    });
+
+    
+window.addEventListener("load", () => {
+
+  touched = { name: true, desc: true, price: true, qty: true };
+  validateForm();
+});
+
+  </script>
+</body>
+</html>
